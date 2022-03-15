@@ -5,9 +5,8 @@ const jwt_decode = require('jwt-decode');
 
 const AmazonCognitoIdentity = require("amazon-cognito-identity-js");
 
-AWS.config.update({ region: process.env.AWS_COGNITO_REGION });
-
 AWS.config.update({
+  region: process.env.AWS_COGNITO_REGION,
   accessKeyId: process.env.ACCESS_KEY_ID,
   secretAccessKey: process.env.SECRET_ACCESS_KEY,
   sessionToken: process.env.SESSION_TOKEN,
@@ -84,30 +83,31 @@ exports.signInUser = async (data) => {
             Pool: userPool
         }
 
-
         const authDetails = {
             Username: data.email,
             Password: data.password
         };
+        
+        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
-    new AmazonCognitoIdentity.CognitoUser(userData).authenticateUser(new AmazonCognitoIdentity.AuthenticationDetails(authDetails), {
+    cognitoUser.authenticateUser(new AmazonCognitoIdentity.AuthenticationDetails(authDetails), {
         onSuccess: (result) => {
             const token = {
               accessToken: result.getAccessToken().getJwtToken(),
               idToken: result.getIdToken().getJwtToken(),
               refreshToken: result.getRefreshToken().getToken(),
             }  
-            return resolve({ statusCode: 200, response: decodeToken(token) });
+            return resolve({ statusCode: 200, response: decodeToken(token)});
           },
           
           onFailure: (err) => {
-            return resolve({ statusCode: 422, response: err.message || JSON.stringify(err)});
+            return resolve({ statusCode: 422, error: err.message || JSON.stringify(err)});
           },
     });
 });
 }
 
 const decodeToken = (token) => {
-    const {  email, exp, auth_time , token_use, sub} = jwt_decode(token.idToken);
+    const { email, exp, auth_time , token_use, sub } = jwt_decode(token.idToken);    
     return { token, email, exp, uid: sub, auth_time, token_use };
 }

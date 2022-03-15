@@ -1,12 +1,12 @@
 import { React } from "react";
-import { useLocation } from "react-router-dom";
+import Page from "./Page";
 
 const Profile = (props) => {
 
   return (
-    <div className="container">
+    <Page>
       <h2 className="text-center">Welcome</h2>
-    </div>
+      </Page>
   );
 };
 

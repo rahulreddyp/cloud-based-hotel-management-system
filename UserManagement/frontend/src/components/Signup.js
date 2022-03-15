@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { API } from "../backend";
+import Page from "./Page";
 
 const Signup = () => {
 
@@ -75,9 +76,10 @@ const Signup = () => {
   };
 
   return (
+    <Page>
     <div className="container">
-      <h2 className="text-center">Signup Here..</h2>
       <div className="m-8 justify-content-center">
+      <h2 className="text-center">Signup Here..</h2>
         <span className="text-danger text-center">{values.message}</span>
           <form>
             <div className="form-group">
@@ -148,6 +150,7 @@ const Signup = () => {
           </form>
         </div>
       </div>
+      </Page>
   );
 };
 

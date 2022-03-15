@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { API } from "../backend";
+import Page from "./Page";
 
 const Signin = () => {
   let history = useHistory();
@@ -20,7 +21,8 @@ const Signin = () => {
     e.preventDefault();
     setError("");
 
-    const emailregex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const emailregex =
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (values.email === "" || values.password === "") {
       setError("All fields are required! Please try again");
@@ -28,19 +30,21 @@ const Signin = () => {
       setError("Please enter valid email address");
     } else {
       SigninUser({ email: values.email, password: values.password })
-      .then((data) => {
-        if (data.status === 200) {
-          history.push({
-            pathname: "/profile",
-          });
-        }
-         else {
-          setError(data.response);
-        }
-      })
-      .catch((err)=> {
-        console.log("Error occurred in signin: ", err);
-      });
+        .then((data) => {
+          if (data.error) {
+            setError(data.error);
+          } else {
+            console.log(data);
+            authenticateUser(data, () => {
+              history.push({
+                pathname: "/profile",
+              });
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("Error occurred in signin: ", err);
+        });
     }
   };
 
@@ -52,28 +56,19 @@ const Signin = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    })
+    });
     return await response.json();
-      // .then((res) => {
-      //   if (res.status === 200) {
-      //     history.push({
-      //       pathname: "/profile",
-      //     });
-      //   }
-      //    else {
-      //     console.log(res.response);
-      //     setError(res.response);
-      //     console.log(error);
-      //   }
-      // })
-      // .catch((err) => {
-      //   console.log(err.response);
-      //   setError(err.response);
-      // });
+  };
+
+  const authenticateUser = (data, next) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("token", JSON.stringify(data.token));
+      next();
+    }
   };
 
   return (
-    <div className="container">
+    <Page>
       <h2 className="text-center mt-3">User Login</h2>
       <div className="m-5 justify-content-center">
         <span className="text-danger text-center">{error}</span>
@@ -105,7 +100,7 @@ const Signin = () => {
           </div>
         </form>
       </div>
-    </div>
+    </Page>
   );
 };
 
