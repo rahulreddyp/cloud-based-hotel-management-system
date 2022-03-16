@@ -11,15 +11,28 @@ AWS.config.update({
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 function getrooms(userData, callback) {
+  
+  var bed = Number(userData.nofbedrooms)
+  console.log(typeof(bed))
   var params = {
     TableName: "rooms",
+    IndexName: "bedrooms-index",
     //   ExpressionAttributeValues: {
     //     ":roomnumber": 100,
     // }
-    KeyConditionExpression: "roomnumber=:rno",
-    ExpressionAttributeValues: {
-      ":rno": 100,
+    KeyConditionExpression: "bedrooms=:bdrooms and availability=:av",
+    // ExpressionAttributeNames: {
+    //   "#num":"roomnumber",
+    //   // "#brooms":"bedrooms"
+
+    // },
+    // FilterExpression: "bedrooms = :bdrooms",
+    ExpressionAttributeValues: { 
+      ":bdrooms":bed,
+      ":av": true
     },
+    "ScanIndexForward": false
+    
   };
 
   docClient.query(params, function (err, data) {
@@ -27,7 +40,6 @@ function getrooms(userData, callback) {
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
-      //   cancelIdleCallback data;
       callback(data);
       //   data.Items.forEach(function (item) {
       //     console.log("ROOMS ", item.roomnumber);
