@@ -2,8 +2,8 @@ import React from "react";
 
 class SearchRoom extends React.Component {
   state = {
-    fromdate: "",
-    todate: "",
+    // fromdate: "",
+    // todate: "",
     nofbedrooms: "",
     guests: "",
   };
@@ -14,7 +14,7 @@ class SearchRoom extends React.Component {
   };
 
   handleSubmit = (e) => {
-    this.props.history.push("/Fetchrooms", this.state);
+    this.props.history.push("/fetchrooms", this.state);
     e.preventDefault();
   };
   render() {
@@ -23,22 +23,22 @@ class SearchRoom extends React.Component {
         <h3>Search Rooms</h3>
         <form onSubmit={this.handleSubmit}>
           <div className="input-block">
-            <input
+            {/* <input
               className="input-field"
               type="date"
               name="fromdate"
               placeholder="from date..."
               required
               onChange={this.handleChange}
-            />
-            <input
+            /> */}
+            {/* <input
               className="input-field"
               type="date"
               name="todate"
               placeholder="to date..."
               required
               onChange={this.handleChange}
-            />
+            /> */}
             <input
               className="input-field"
               type="number"

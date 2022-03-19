@@ -1,37 +1,71 @@
 import React from "react";
+import { API } from "../Backend";
 
-class Fetchrooms extends React.Component {
-  constructor(props){
+class FetchRooms extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
-      data: this.props.location.state};
+      userdata: this.props.location.state,
+      items: [],
+      DataisLoaded: false,
+    };
   }
   componentDidMount() {
-    const getAllUsers =  () => {
-      fetch(
-        "http://localhost:5000/fetchdata",
+    const getAllUsers = async () => {
+      const res = await fetch(
+        `${API}/fetchdata`,
 
         {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-          },    
-          body: JSON.stringify(this.state.data),
+          },
+          body: JSON.stringify(this.state.userdata),
         }
-      ).then(res=>res.json());
+      );
+
+      return await res.json();
     };
-    getAllUsers();
+    getAllUsers()
+      .then((data) => {
+        this.setState({
+          items: data.body,
+          DataisLoaded: true,
+        });
+      })
+      .catch((err) => console.log(err));
   }
+
+  handleSubmit = (item) => (e) => {
+    item.fromdate = this.props.location.state.fromdate;
+    item.todate = this.props.location.state.todate;
+    this.props.history.push("/bookroom", item);
+    e.preventDefault();
+  };
   render() {
+    const { DataisLoaded, items } = this.state;
+    if (!DataisLoaded)
+      return (
+        <div>
+          <h1> Please wait some time.... </h1>{" "}
+        </div>
+      );
+
     return (
       <div className="Fetchrooms">
         <h2>Profile Details</h2>
-        <p>Firstname: {this.state.data.fromdate}</p>
-        <p>Lastname: {this.state.data.todate}</p>
-        <p>Email: {this.state.data.nofbedrooms}</p>
+        {items.map((item) => (
+          <ul key={item.roomnumber}>
+            <li>Bedrooms: {item.bedrooms} </li>
+            <li>Room Number: {item.roomnumber}</li>
+            <li>Maximum guests allowed: {item.maximumguests} </li>
+            <li>Price/day: {item.price} </li>
+            <button onClick={this.handleSubmit(item)} >Book</button>
+          </ul>
+        ))}
       </div>
     );
   }
 }
-export default Fetchrooms;
+export default FetchRooms;
