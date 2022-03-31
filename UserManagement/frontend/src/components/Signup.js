@@ -18,12 +18,11 @@ const Signup = () => {
   const { firstname, lastname, email, phone, password, confirmpassword } = values;
 
   const handleChange = (name) => (event) => {
-    setValues({ ...values, message: false, [name]: event.target.value });
+    setValues({ ...values, message: "", [name]: event.target.value });
   };
 
   const SignupUser = async () => {
 
-    try {
       const response = await fetch(`${API}/signup`, {
         method: "POST",
         headers: {
@@ -34,25 +33,25 @@ const Signup = () => {
       });
       console.log(response);
       return await response.json();
-    } catch (err) {
-      return console.log(err);
-    }
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setValues({ ...values, message: false });
+    setValues({ ...values, message: "" });
+    console.log(values);
+    
     if(values.firstname === "" || values.lastname === "" || values.email === "" || values.phone === "" || values.password === "" || values.confirmpassword === "" ) {
       setValues({ ...values, message: "Fileds cannot be empty!" });
     }
     if (password === confirmpassword) {
 
-      SignupUser(values)
+      SignupUser()
       .then((data) => {
         if (data.error) {
           setValues({ ...values, message: data.error, success: false });
         } else {
           
+          console.log("User Signup success");
           setValues({
             ...values,
             firstname: "",
@@ -77,8 +76,8 @@ const Signup = () => {
 
   return (
     <Page>
-    <div className="container">
-      <div className="m-8 justify-content-center">
+    {/* <div className="container"> */}
+      <div className="mt-8 justify-content-center">
       <h2 className="text-center">Signup Here..</h2>
         <span className="text-danger text-center">{values.message}</span>
           <form>
@@ -110,6 +109,7 @@ const Signup = () => {
                 type="email"            
                 placeholder="Enter email address"
                 onChange={handleChange("email")}
+                required
               />
             </div>
 
@@ -120,6 +120,7 @@ const Signup = () => {
                 type="text"
                 placeholder="Enter mobile number"
                 onChange={handleChange("phone")}
+                required
               />
             </div>
 
@@ -130,6 +131,7 @@ const Signup = () => {
                 type="password"
                 placeholder="Enter password"
                 onChange={handleChange("password")}
+                required
               />
             </div>
 
@@ -140,6 +142,7 @@ const Signup = () => {
                 type="password"
                 placeholder="please re-enter password"
                 onChange={handleChange("confirmpassword")}
+                required
               />
             </div>
             <div className="m-4 text-center">
@@ -149,8 +152,8 @@ const Signup = () => {
             </div>
           </form>
         </div>
-      </div>
-      </Page>
+      {/* </div> */}
+    </Page>
   );
 };
 

@@ -3,7 +3,7 @@ import { Link, withRouter, useHistory } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { isLoggedIn, signoutUser } from "./Auth";
 
-const Header = ({c}) => {
+const Header = ({m}) => {
     let history = useHistory();
 
     const signoutUsers = () => {
@@ -20,7 +20,7 @@ const Header = ({c}) => {
           {!isLoggedIn() && (
             <Fragment>
               <Nav.Link href="/login">Signin</Nav.Link>
-              <Nav.Link href="/fsd"> Signup</Nav.Link>
+              <Nav.Link href="/"> Signup</Nav.Link>
             </Fragment>
           )}
 

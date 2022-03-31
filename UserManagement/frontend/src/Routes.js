@@ -5,14 +5,14 @@ import Signin from "./components/Signin";
 import Profile from "./components/Profile";
 
 const Routes = () => {
-  return (
-    <Router>
+  return (    
+    <Router>     
       <Switch>
         <Route exact path="/" component={Signup}></Route>
         <Route exact path="/login" component={Signin}></Route>
         <Route path="/profile" component={Profile}></Route>
-      </Switch>
-    </Router>
+      </Switch>      
+    </Router>    
   );
 };
 

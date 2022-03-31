@@ -33,7 +33,7 @@ app.post("/login", async (req, res) => {
       const result = await Cognito.signInUser(req.body);   
       console.log(result); 
       // res.cookie('token', result.response.token.idToken, result.response.exp);
-      return res.status(result.statusCode).json(result.response);
+      return res.status(result.statusCode).json(result);
     }
   });
 
