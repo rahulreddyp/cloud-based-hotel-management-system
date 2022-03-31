@@ -3,7 +3,7 @@
 
 
 * *Date Created*: 03 FEB 2022
-* *Last Modified*: 10 FEB 2022
+* *Last Modified*: 19 MAR 2022
 
 ## Team
 
@@ -15,10 +15,9 @@
 
 1.  User Profile Management
 2.	Reservations
-3.	Payment
+3.	Food Orders
 4.	Virtual Support
 5.	Housekeeping management
-6.	Notification
 
 
 ## Services
@@ -26,7 +25,7 @@
 ### Compute:
 
 1.	Lambda – cloud functions
-2.  *Not yet decided
+2.  Step Functions
 
 ### Storage:
 
@@ -60,3 +59,16 @@ Went through different AWS services and started analyzing which services would b
 
 ### To-do
 Go through each service thoroughly and finalize the services to be used 
+
+
+## Project Status
+
+###  Completed Tasks
+
+1. User Management (SignUp, SignIn, Token Generation) - done
+2. Reservations - Search Rooms, Fetch Rooms, Book Room - done
+
+### In Progress
+
+1. User Mangement (Forgot Password)
+2. Virtual Support
