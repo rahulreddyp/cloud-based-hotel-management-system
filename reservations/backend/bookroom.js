@@ -12,14 +12,12 @@ AWS.config.update({
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 function bookroom(userData, callback) {
-  console.log("userdata-----------", userData);
   var rnumber = Number(userData.roomnumber);
   var totalguests = Number(userData.guests);
   var id = Number(randomstring.generate(7));
-  console.log(typeof randomstring.generate(7));
 
   var params1 = {
-    TableName: "bookings",
+    TableName: "Bookings",
     Item: {
       bookingid: randomstring.generate(7),
       roomnumber: rnumber,
@@ -30,10 +28,11 @@ function bookroom(userData, callback) {
   };
 
   docClient.put(params1, function (err, data) {
-    if (err) console.log(err);
-    else {
+    if (err) {
+      console.log("ERROR",err);
+    } else {
       var params2 = {
-        TableName: "rooms",
+        TableName: "Rooms",
         Key: {
           roomnumber: rnumber,
         },
@@ -54,8 +53,6 @@ function bookroom(userData, callback) {
           console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
         }
       });
-
-      console.log(data);
     }
   });
 
