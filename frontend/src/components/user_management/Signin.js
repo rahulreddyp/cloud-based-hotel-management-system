@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { API } from "../backend";
-import Page from "./Page";
+import { API } from "../../backend";
+import Page from "../Page";
 
 const Signin = () => {
   let history = useHistory();
@@ -37,7 +37,7 @@ const Signin = () => {
             console.log(data);
             authenticateUser(data, () => {
               history.push({
-                pathname: "/profile",
+                pathname: "/searchrooms",
               });
             });
           }

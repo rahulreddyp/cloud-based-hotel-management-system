@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { API } from "../backend";
-import Page from "./Page";
+import { API } from "../../backend";
+import Page from "../Page";
 
 const Signup = () => {
 
@@ -24,10 +24,13 @@ const Signup = () => {
   const SignupUser = async () => {
 
       const response = await fetch(`${API}/signup`, {
-        method: "POST",
-        headers: {
+        method: "POST",        
+        // mode: 'no-cors',
+        headers: {          
+          "Access-Control-Allow-Origin": "*", 
           Accept: "application/json",
           "Content-Type": "application/json",
+
         },
         body: JSON.stringify({ firstname, lastname, email, phone, password }),
       });
@@ -50,8 +53,7 @@ const Signup = () => {
         if (data.error) {
           setValues({ ...values, message: data.error, success: false });
         } else {
-          
-          console.log("User Signup success");
+          console.log("User Signup success", data);
           setValues({
             ...values,
             firstname: "",

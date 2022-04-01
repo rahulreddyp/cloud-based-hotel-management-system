@@ -15,7 +15,7 @@ function getrooms(userData, callback) {
   var bed = Number(userData.nofbedrooms);
   var guests = Number(userData.guests);
   var params = {
-    TableName: "rooms",
+    TableName: "Rooms",
     FilterExpression: "bedrooms = :bdrooms and maxguests>=:mguests",
     KeyConditionExpression: "bedrooms=:bdrooms and maxguests=:mguests",
     ExpressionAttributeValues: {

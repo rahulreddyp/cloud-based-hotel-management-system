@@ -1,7 +1,7 @@
 import React, {Fragment} from "react";
-import { Link, withRouter, useHistory } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
-import { isLoggedIn, signoutUser } from "./Auth";
+import { isLoggedIn, signoutUser } from "./user_management/Auth";
 
 const Header = ({m}) => {
     let history = useHistory();

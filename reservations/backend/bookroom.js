@@ -19,7 +19,7 @@ function bookroom(userData, callback) {
   console.log(typeof randomstring.generate(7));
 
   var params1 = {
-    TableName: "bookings",
+    TableName: "Bookings",
     Item: {
       bookingid: randomstring.generate(7),
       roomnumber: rnumber,
@@ -33,7 +33,7 @@ function bookroom(userData, callback) {
     if (err) console.log(err);
     else {
       var params2 = {
-        TableName: "rooms",
+        TableName: "Rooms",
         Key: {
           roomnumber: rnumber,
         },

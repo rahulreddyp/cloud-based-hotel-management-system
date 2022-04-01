@@ -1,12 +1,12 @@
-import { API } from "../backend";
+import { API } from "../../backend";
 
 export const isLoggedIn = () => {
     if (typeof window == "undefined") {
       return false;
     }
-    const token = localStorage.getItem("token");
-    if (token) {
-      return JSON.parse(token);
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      return user.token;
     } else {
       return false;
     }
