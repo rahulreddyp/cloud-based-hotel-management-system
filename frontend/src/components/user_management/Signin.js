@@ -37,7 +37,7 @@ const Signin = () => {
             console.log(data);
             authenticateUser(data, () => {
               history.push({
-                pathname: "/searchrooms",
+                pathname: "/searchroom",
               });
             });
           }

@@ -1,9 +1,12 @@
 const express = require("express");
 
 const bodyParser = require("body-parser");
-const Cognito = require("./cognito");
-const cors = require("cors");
 
+const Cognito = require("./UserManagement/cognito");
+const getrooms = require("./Reservations/getrooms");
+const bookroom = require("./Reservations/bookroom");
+
+const cors = require("cors");
 const app = express();
 
 // Middlewares
@@ -36,6 +39,41 @@ app.post("/login", async (req, res) => {
       return res.status(result.statusCode).json(result);
     }
   });
+
+  app.post("/fetchdata", async (req, res) => {
+    if (!req.body) {
+      console.log("Error, no JSON body");
+  
+      return res.status(422).json({
+        error: "Failed to fetch JSON body",
+      });
+    } else {
+      getrooms.getrooms(req.body, function (result) {
+        res.status(200).json({
+          message: "success",
+          body: result,
+        });
+        return res;
+      });
+    }
+  });
+  
+  app.post("/bookroom", async (req, res) => {
+    if (!req.body) {
+      console.log("Error, no JSON body");
+  
+      return res.status(422).json({
+        error: "Failed to fetch JSON body",
+      });
+    } else {
+      bookroom.bookroom(req.body, function (result) {
+        return res.status(200).json({
+          message: "success",
+          body: result,
+        });
+      });
+    }
+  })
 
 const PORT = 5000;
 
