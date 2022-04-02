@@ -1,0 +1,250 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "EC2 Instance with Node installation",
+    "Parameters": {
+        "KeyName": {
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "PublicSubnet1CIDR": {
+            "Description": "Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone",
+            "Type": "String",
+            "Default": "10.0.0.0/16"
+        }
+    },
+    "Resources": {
+        "VPC": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": "10.0.0.0/16",
+                "EnableDnsSupport": "true",
+                "EnableDnsHostnames": "true"
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "30b529b6-ecee-4fe4-af43-3cb34e8c8703"
+                }
+            }
+        },
+        "InternetGateway": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "b541deb5-2f6d-4831-8d95-16ef74bb8ebf"
+                }
+            }
+        },
+        "InternetGatewayAttachment": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "InternetGatewayId": {
+                    "Ref": "InternetGateway"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "fc720189-1350-4417-8ae9-1e7d3553c021"
+                }
+            }
+        },
+        "PublicSubnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPC"
+                },
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "PublicSubnet1CIDR"
+                },
+                "MapPublicIpOnLaunch": true
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "af618440-0e4e-4437-920b-fd1e7a3464ff"
+                }
+            }
+        },
+        "EC2SecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "SG with port 22, 8080 and 80 inbound",
+                "GroupName": "server",
+                "VpcId": "vpc-09faa851c8ad7e5cf",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": 80,
+                        "ToPort": 80,
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": 443,
+                        "ToPort": 443,
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ]
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "82f2d78f-6ff6-4c10-b060-aacf03b4785a"
+                }
+            }
+        },
+        "EC2Instance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "ImageId": "ami-0c02fb55956c7d316",
+                "InstanceType": "t2.micro",
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "SecurityGroupIds": [
+                    {
+                        "Fn::GetAtt": [
+                            "EC2SecurityGroup",
+                            "GroupId"
+                        ]
+                    }
+                ],
+                "SubnetId": {
+                    "Ref": "PublicSubnet1"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "backend"
+                    }
+                ],
+                "UserData": {
+                    "Fn::Base64": "#!/bin/bash\nyum update -y\ncurl -sL https://rpm.nodesource.com/setup_lts.x | bash -\n\nyum install nodejs -y\n"
+                }
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "828cb41d-552f-47ef-b69a-55a6f065ae4f"
+                }
+            }
+        },
+        "ElasticIp": {
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "EC2Instance"
+                },
+                "Domain": "vpc"
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "3e06665a-8307-4d4f-968f-207997b4a91d"
+                }
+            }
+        }
+    },
+    "Metadata": {
+        "AWS::CloudFormation::Designer": {
+            "82f2d78f-6ff6-4c10-b060-aacf03b4785a": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 360,
+                    "y": 300
+                },
+                "z": 1,
+                "embeds": []
+            },
+            "b541deb5-2f6d-4831-8d95-16ef74bb8ebf": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 480,
+                    "y": 300
+                },
+                "z": 1,
+                "embeds": []
+            },
+            "30b529b6-ecee-4fe4-af43-3cb34e8c8703": {
+                "size": {
+                    "width": 150,
+                    "height": 150
+                },
+                "position": {
+                    "x": 360,
+                    "y": 90
+                },
+                "z": 1,
+                "embeds": []
+            },
+            "af618440-0e4e-4437-920b-fd1e7a3464ff": {
+                "size": {
+                    "width": 240,
+                    "height": 240
+                },
+                "position": {
+                    "x": 60,
+                    "y": 90
+                },
+                "z": 1,
+                "embeds": [
+                    "828cb41d-552f-47ef-b69a-55a6f065ae4f"
+                ]
+            },
+            "828cb41d-552f-47ef-b69a-55a6f065ae4f": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 90,
+                    "y": 150
+                },
+                "z": 2,
+                "parent": "af618440-0e4e-4437-920b-fd1e7a3464ff",
+                "embeds": [],
+                "isassociatedwith": [
+                    "82f2d78f-6ff6-4c10-b060-aacf03b4785a"
+                ],
+                "iscontainedinside": [
+                    "af618440-0e4e-4437-920b-fd1e7a3464ff"
+                ]
+            },
+            "3e06665a-8307-4d4f-968f-207997b4a91d": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 60,
+                    "y": 390
+                },
+                "z": 1,
+                "embeds": [],
+                "isassociatedwith": [
+                    "828cb41d-552f-47ef-b69a-55a6f065ae4f"
+                ]
+            },
+            "fc720189-1350-4417-8ae9-1e7d3553c021": {
+                "source": {
+                    "id": "30b529b6-ecee-4fe4-af43-3cb34e8c8703"
+                },
+                "target": {
+                    "id": "b541deb5-2f6d-4831-8d95-16ef74bb8ebf"
+                }
+            }
+        }
+    }
+}
