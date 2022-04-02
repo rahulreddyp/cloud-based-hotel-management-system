@@ -1,0 +1,238 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: EC2 Instance with Node installation
+
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+
+  PublicSubnet1CIDR:
+    Description: Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone
+    Type: String
+    Default: 10.0.0.0/16 
+
+Resources:
+
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      Tags:
+      - Key: Name
+        Value: vpc
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: !Ref PublicSubnet1CIDR
+      MapPublicIpOnLaunch: true        
+
+  # NatGateway1EIP:
+  #   Type: AWS::EC2::EIP
+  #   DependsOn: InternetGatewayAttachment
+  #   Properties:
+  #     Domain: vpc     
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: Public Routes
+
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+ 
+
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SG with port 22, 8080 and 80 inbound
+      GroupName: server
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0c02fb55956c7d316
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !GetAtt EC2SecurityGroup.GroupId
+      # !Join [',' !GetAtt EC2SecurityGroup.GroupId]
+      # SecurityGroups:
+      #   - !Ref EC2SecurityGroup
+      SubnetId: !Ref PublicSubnet1
+
+      Tags:
+        - Key: Name
+          Value: backend
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          yum update -y
+          curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
+
+          yum install nodejs -y
+
+  # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+
+  ElasticIp:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref EC2Instance
+      Domain: vpc
+
+  # BookingsTable: 
+  #   Type: AWS::DynamoDB::Table
+  #   Properties: 
+  #     AttributeDefinitions: 
+  #       - 
+  #         AttributeName: "bookingid"
+  #         AttributeType: "N"
+  #       -
+  #         AttributeName: "idname"
+  #         AttributeType: "S"
+  #       - 
+  #         AttributeName: "date"
+  #         AttributeType: "S"  
+  #       - 
+  #         AttributeName: "roomnumber"
+  #         AttributeType: "N"
+  #       - 
+  #         AttributeName: "idnumber"
+  #         AttributeType: "N"
+  #       - 
+  #         AttributeName: "guests"
+  #         AttributeType: "N"
+  #       - 
+  #         AttributeName: "fullname"
+  #         AttributeType: "S"
+  #     KeySchema: 
+  #       - 
+  #         AttributeName: "Album"
+  #         KeyType: "HASH"
+  #       - 
+  #         AttributeName: "Artist"
+  #         KeyType: "RANGE"
+  #     ProvisionedThroughput: 
+  #       ReadCapacityUnits: "5"
+  #       WriteCapacityUnits: "5"
+  #     TableName: "Bookings"
+
+ # RoomsTable: 
+  #   Type: AWS::DynamoDB::Table
+  #   Properties: 
+  #     AttributeDefinitions: 
+  #       - 
+  #         AttributeName: "roomnumber"
+  #         AttributeType: "N"
+  #       - 
+  #         AttributeName: "price"
+  #         AttributeType: "N"
+  #       - 
+  #         AttributeName: "maxguests"
+  #         AttributeType: "N"
+  #       - 
+  #         AttributeName: "bedrooms"
+  #         AttributeType: "N"
+  #       - 
+  #         AttributeName: "availability"
+  #         AttributeType: "B"
+  #     KeySchema: 
+  #       - 
+  #         AttributeName: "Album"
+  #         KeyType: "HASH"
+  #       - 
+  #         AttributeName: "Artist"
+  #         KeyType: "RANGE"
+  #     ProvisionedThroughput: 
+  #       ReadCapacityUnits: "5"
+  #       WriteCapacityUnits: "5"
+  #     TableName: "Rooms"
+
+
+ # OrdersTable: 
+  #   Type: AWS::DynamoDB::Table
+  #   Properties: 
+  #     AttributeDefinitions: 
+  #       - 
+  #         AttributeName: "Bookingid"
+  #         AttributeType: "S"
+  #       - 
+  #         AttributeName: "orderdetails"
+  #         AttributeType: "L"
+  #     KeySchema: 
+  #       - 
+  #         AttributeName: "Album"
+  #         KeyType: "HASH"
+  #       - 
+  #         AttributeName: "Artist"
+  #         KeyType: "RANGE"
+  #     ProvisionedThroughput: 
+  #       ReadCapacityUnits: "5"
+  #       WriteCapacityUnits: "5"
+  #     TableName: "Orders"
+
+ # FoodTable: 
+  #   Type: AWS::DynamoDB::Table
+  #   Properties: 
+  #     AttributeDefinitions: 
+  #       - 
+  #         AttributeName: "menuid"
+  #         AttributeType: "N"
+  #       - 
+  #         AttributeName: "mealtype"
+  #         AttributeType: "S"
+  #       - 
+  #         AttributeName: "Name"
+  #         AttributeType: "S"
+  #       - 
+  #         AttributeName: "fooditems"
+  #         AttributeType: "S"
+  #     KeySchema: 
+  #       - 
+  #         AttributeName: "Album"
+  #         KeyType: "HASH"
+  #       - 
+  #         AttributeName: "Artist"
+  #         KeyType: "RANGE"
+  #     ProvisionedThroughput: 
+  #       ReadCapacityUnits: "5"
+  #       WriteCapacityUnits: "5"
+  #     TableName: "Food"
+
