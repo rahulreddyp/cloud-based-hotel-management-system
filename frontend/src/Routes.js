@@ -6,7 +6,7 @@ import Profile from "./components/user_management/Profile";
 import SearchRoom from "./components/reservations/SearchRoom";
 import FetchRooms from "./components/reservations/Fetchrooms";
 import BookRoom from "./components/reservations/BookRoom";
-
+import BookFood from "./components/reservations/BookFood";
 const Routes = () => {
   return (    
     <Router>     
@@ -17,6 +17,7 @@ const Routes = () => {
         <Route exact path="/searchroom" component={SearchRoom} />
         <Route exact path="/fetchrooms" component={FetchRooms} />
         <Route exact path="/bookroom" component={BookRoom} />
+        <Route exact path="/bookfood" component={BookFood} />
       </Switch>      
     </Router>    
   );

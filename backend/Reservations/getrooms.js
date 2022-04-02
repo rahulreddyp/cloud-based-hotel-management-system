@@ -59,7 +59,6 @@ function getrooms(userData, callback) {
       //   }
       //   if (availflag == true) {
         if(data.Items[j].availability === true){
-          console.log(data.Items[j]);
           eachdata.roomnumber = data.Items[j].roomnumber;
           eachdata.bedrooms = data.Items[j].bedrooms;
           eachdata.maximumguests = data.Items[j].maxguests;
