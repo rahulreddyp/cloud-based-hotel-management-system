@@ -5,9 +5,9 @@ const bodyParser = require("body-parser");
 const Cognito = require("./UserManagement/cognito");
 const getrooms = require("./Reservations/getrooms");
 const bookroom = require("./Reservations/bookroom");
-const bookfood = require("./Reservations/bookfood");
-const confirmorder = require("./Reservations/confirmorder");
-const housekeeping = require("./Reservations/housekeeping")
+const bookfood = require("./OrderFood/bookfood");
+const confirmorder = require("./OrderFood/confirmorder");
+const housekeeping = require("./HouseKeeping/housekeeping")
 const cors = require("cors");
 const app = express();
 
