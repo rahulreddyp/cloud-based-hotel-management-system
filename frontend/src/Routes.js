@@ -7,6 +7,7 @@ import SearchRoom from "./components/reservations/SearchRoom";
 import FetchRooms from "./components/reservations/Fetchrooms";
 import BookRoom from "./components/reservations/BookRoom";
 import BookFood from "./components/reservations/BookFood";
+import HouseKeeping from "./components/reservations/HouseKeeping";
 const Routes = () => {
   return (    
     <Router>     
@@ -18,6 +19,8 @@ const Routes = () => {
         <Route exact path="/fetchrooms" component={FetchRooms} />
         <Route exact path="/bookroom" component={BookRoom} />
         <Route exact path="/bookfood" component={BookFood} />
+        <Route exact path="/housekeeping" component={HouseKeeping} />
+        
       </Switch>      
     </Router>    
   );
