@@ -1,12 +1,16 @@
 import React from "react";
 import { API } from "../../backend";
-
+import Button from 'react-bootstrap/Button';
 class BookRoom extends React.Component {
   state = {
     roomnumber: this.props.location.state.roomnumber,
     fullname: "",
     guests: "",
-    date: new Date().toString()
+    date: new Date().toString(),
+    idnumber: "",
+    idname: "",
+    bookingconfirmation:"",
+    bookingid: ""
     // fromdate: this.props.location.state.fromdate,
     // todate: this.props.location.state.todate,
   };
@@ -35,13 +39,22 @@ class BookRoom extends React.Component {
       };
       sendFormData()
         .then((data) => {
-          console.log(data.message);
-          
+          if(data.body){
+            this.setState({bookingconfirmation:"Successfully booked room"})
+            this.setState({bookingid:data.body})
+
+          }else{
+            this.setState({bookingconfirmation:"Unable to book room, please try again"})
+          }
         })
         .catch((err) => console.log(err));
     
    
   };
+  selectfood=(e)=>{
+    this.props.history.push("/bookfood", this.state);
+    e.preventDefault();
+  }
   render() {
     const details = this.props.location.state;
 
@@ -64,6 +77,20 @@ class BookRoom extends React.Component {
           onChange={this.handleChange}
           required
         />
+        <input
+          type="text"
+          name="idname"
+          placeholder="Identity.."
+          onChange={this.handleChange}
+          required
+        />
+        <input
+          type="number"
+          name="idnumber"
+          placeholder="Identity number.."
+          onChange={this.handleChange}
+          required
+        />
         {/* <input
           type="date"
           name="fromdate"
@@ -82,6 +109,9 @@ class BookRoom extends React.Component {
         {/* <p>Lastname: {details.lastname}</p> */}
         {/* <p>Email: {details.email}</p>  */}
         </form> 
+        <h6>{this.state.bookingconfirmation}</h6>
+        <p> {this.state.bookingid}</p>
+        <Button variant="outline-primary" onClick={this.selectfood}>Book Food</Button>
       </div>
     );
   }

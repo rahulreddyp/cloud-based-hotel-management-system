@@ -60,7 +60,7 @@ class FetchRooms extends React.Component {
             <li>Bedrooms: {item.bedrooms} </li>
             <li>Room Number: {item.roomnumber}</li>
             <li>Maximum guests allowed: {item.maximumguests} </li>
-            <li>Price/day: {item.price} </li>
+            <li>Price: {item.price} </li>
             <button onClick={this.handleSubmit(item)} >Book</button>
           </ul>
         ))}
