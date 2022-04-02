@@ -49,7 +49,7 @@ const Signin = () => {
   };
 
   const SigninUser = async (data) => {
-    const response = await fetch(`${API}/login`, {
+    const response = await fetch(`${API}/signin`, {
       method: "POST",
       headers: {
         Accept: "application/json",
