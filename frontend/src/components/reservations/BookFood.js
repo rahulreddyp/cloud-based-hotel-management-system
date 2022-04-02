@@ -38,6 +38,7 @@ class BookRoom extends React.Component {
     roomnumber: this.props.location.state.roomnumber,
     bookingid: this.props.location.state.bookingid,
     menu: [],
+    time:""
   };
 
   handleChange = (e) => {
@@ -70,9 +71,6 @@ class BookRoom extends React.Component {
       })
       .catch((err) => console.log(err));
   };
-  handleSubmit = (e) => {
-
-  };
 
   order = (e) => {
     var order = {
@@ -97,7 +95,7 @@ class BookRoom extends React.Component {
         if (data.body) {
           console.log("success order");
           alert("Order placed");
-          
+          this.props.history.push("/housekeeping",this.state.bookingid);
         } else {
           console.log("failed order");
         }
@@ -134,7 +132,11 @@ class BookRoom extends React.Component {
     }
     // this.setState({ fooddata: temp1 });
   };
+  housekeeping=(e)=>{
+    this.setState({time:e.target.value})
+    console.log(e.target.value);
 
+  }
   menulist = (e) => {
     return this.state.menu.map((current) => {
       return (
@@ -149,7 +151,6 @@ class BookRoom extends React.Component {
   render() {
     return (
       <div>
-        I am in book food page
         {this.menulist()}
         <Button onClick={this.order}>Submit</Button>
       </div>
