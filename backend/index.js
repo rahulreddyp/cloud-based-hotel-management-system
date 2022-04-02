@@ -25,7 +25,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/signin", async (req, res) => {
     if (!req.body) {
       console.log("Error, no JSON body");
       return res.status(422).json({
