@@ -1,9 +1,12 @@
 import React from "react";
-
+import { API } from "../../backend";
+import Button from 'react-bootstrap/Button';
+import Card from "react-bootstrap/esm/Card";
+import Dropdown from "react-bootstrap/Dropdown";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Form from "react-bootstrap/Form";
 class SearchRoom extends React.Component {
   state = {
-    // fromdate: "",
-    // todate: "",
     nofbedrooms: "",
     guests: "",
   };
@@ -21,46 +24,35 @@ class SearchRoom extends React.Component {
     return (
       <div className="container">
         <h3>Search Rooms</h3>
-        <form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit}>
           <div className="input-block">
-            {/* <input
-              className="input-field"
-              type="date"
-              name="fromdate"
-              placeholder="from date..."
-              required
-              onChange={this.handleChange}
-            /> */}
-            {/* <input
-              className="input-field"
-              type="date"
-              name="todate"
-              placeholder="to date..."
-              required
-              onChange={this.handleChange}
-            /> */}
-            <input
+          <Form.Label>Bedrooms</Form.Label>
+            <Form.Control 
               className="input-field"
               type="number"
               name="nofbedrooms"
-              placeholder="nofbedrooms.."
+              placeholder="Bedrooms..."
               required
               onChange={this.handleChange}
             />
-            <input
+            <br></br>
+            <Form.Label>Number of Guests</Form.Label>
+            <Form.Control 
               className="input-field"
               type="number"
               name="guests"
-              placeholder="guests..."
+              placeholder="Guests..."
               required
               onChange={this.handleChange}
             />
-
-            <button onSubmit={this.handleSubmit} className="input-submit">
+            <br></br>
+            <div style={{textAlign:"right"}}>
+            <Button  onClick={this.handleSubmit} className="input-submit">
               Search
-            </button>
+            </Button>
+            </div>
           </div>
-        </form>
+        </Form>
       </div>
     );
   }

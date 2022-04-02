@@ -8,13 +8,18 @@ import Form from "react-bootstrap/Form";
 
 const EachItem = (props) => (
   <div>
-    <Card style={{ width: "60%", margin: "auto" }}>
+    <Card style={{ width: "60%", margin: "auto" }} border="success">
+    <Card.Header >
+      <div style={{display:"flex"}}>
       <Card.Title style={{ marginRight: "auto" }}>
         {props.item.mealtype}
       </Card.Title>
       <Card.Subtitle>{props.item.Name}</Card.Subtitle>
 
-      <Card.Body>
+      </div>
+      </Card.Header>
+    <Card.Body>
+      
         <Card.Text>{props.item.fooditems}</Card.Text>
         <Form>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -38,7 +43,7 @@ class BookRoom extends React.Component {
     roomnumber: this.props.location.state.roomnumber,
     bookingid: this.props.location.state.bookingid,
     menu: [],
-    time:""
+    time: "",
   };
 
   handleChange = (e) => {
@@ -95,7 +100,7 @@ class BookRoom extends React.Component {
         if (data.body) {
           console.log("success order");
           alert("Order placed");
-          this.props.history.push("/housekeeping",this.state.bookingid);
+          this.props.history.push("/housekeeping", this.state.bookingid);
         } else {
           console.log("failed order");
         }
@@ -110,33 +115,13 @@ class BookRoom extends React.Component {
         quantity: e.target.value,
       };
       var each = this.state.fooddata.concat(temp);
-      //   var temp1 = this.state.fooddata;
-
-      //   if (temp1.length > 0) {
-      //     for (let i = 0; i < temp1.length; i++) {
-      //       if (temp1[i].id === menuid) {
-      //          console.log("---------------",temp1)
-      //         delete temp1[i];
-      //         console.log(">>>>>>>>>>>>>>",temp1)
-      //         temp1 = this.state.fooddata.concat(temp);
-      //         this.setState({ fooddata: temp1 });
-      //       } else {
-      //         temp1 = this.state.fooddata.concat(temp);
-      //         this.setState({ fooddata: temp1 });
-      //       }
-      //     }
-      //   } else {
       this.setState({ fooddata: each });
-      //   }
-      //   console.log(this.state.fooddata);
     }
-    // this.setState({ fooddata: temp1 });
   };
-  housekeeping=(e)=>{
-    this.setState({time:e.target.value})
+  housekeeping = (e) => {
+    this.setState({ time: e.target.value });
     console.log(e.target.value);
-
-  }
+  };
   menulist = (e) => {
     return this.state.menu.map((current) => {
       return (
@@ -150,7 +135,8 @@ class BookRoom extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{textAlign:"center"}}>
+        <h3>Food Options</h3>
         {this.menulist()}
         <Button onClick={this.order}>Submit</Button>
       </div>
