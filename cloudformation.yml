@@ -135,9 +135,13 @@ Resources:
 
           sudo systemctl restart nginx
 
+          sudo chown -R $USER:$USER .
+
+          sudo yum install git -y
+
           git clone https://git.cs.dal.ca/rrp/csci5409_project_group58.git
 
-          cd backend
+          cd csci5409_project_group58/backend
 
           npm install
           
@@ -283,6 +287,9 @@ Outputs:
   VPCID:
     Description: The VPC ID
     Value: !Ref VPC
-  EC2ID:
+  PublicSubnet_ID:
+    Description: The Public Subnet ID
+    Value: !Ref PublicSubnet1
+  EC2_ID:
     Description: The EC2 Instance Public IPV4
     Value: !Ref ElasticIp
