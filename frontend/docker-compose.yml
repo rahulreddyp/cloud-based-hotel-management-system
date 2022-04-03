@@ -1,0 +1,12 @@
+services:
+  web:
+    image: 853844650469.dkr.ecr.us-east-1.amazonaws.com/skyline:latest
+    container_name: skyline
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - DEBUG=1
+      
