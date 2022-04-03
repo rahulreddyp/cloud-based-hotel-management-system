@@ -42,13 +42,19 @@ class HouseKeeping extends React.Component {
       .catch((err) => console.log(err));
     e.preventDefault();
   };
-
+  home = (e)=>{
+    this.props.history.push("/");
+  }
   render() {
       console.log(this.props.location.state)
     return (
       <div style={{ width: "60%", margin: "auto" }}>
+          <div style={{textAlign:"center"}}>
+          <h3>House Keeping</h3>
+
+          </div>
         <Form>
-          <Form.Label>HouseKeeping time slot </Form.Label>
+          <Form.Label>Please select house keeping time </Form.Label>
           <Form.Control
             type="time"
             placeholder="Enter time"
@@ -58,7 +64,12 @@ class HouseKeeping extends React.Component {
           <Form.Text className="text-muted">
             Please select if required! Can book later by calling frontdesk
           </Form.Text>
+          <br></br>
+          <div style={{display:"flex"}}>
+           <Button style={{marginRight:"auto"}}variant="secondary" onClick={this.home}>Cancel</Button> 
           <Button onClick={this.handleSubmit}>Submit</Button>
+          
+        </div>
         </Form>
       </div>
     );

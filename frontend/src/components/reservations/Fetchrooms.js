@@ -1,5 +1,10 @@
 import React from "react";
 import { API } from "../../backend";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/esm/Card";
+import Dropdown from "react-bootstrap/Dropdown";
+import ListGroup from "react-bootstrap/ListGroup";
+import Form from "react-bootstrap/Form";
 
 class FetchRooms extends React.Component {
   constructor(props) {
@@ -54,15 +59,27 @@ class FetchRooms extends React.Component {
 
     return (
       <div className="Fetchrooms">
-        <h2>Profile Details</h2>
         {items.map((item) => (
-          <ul key={item.roomnumber}>
-            <li>Bedrooms: {item.bedrooms} </li>
-            <li>Room Number: {item.roomnumber}</li>
-            <li>Maximum guests allowed: {item.maximumguests} </li>
-            <li>Price: {item.price} </li>
-            <button onClick={this.handleSubmit(item)} >Book</button>
-          </ul>
+          <div style={{ width: "60%", margin: "auto", textAlign: "center" }}>
+            <h2> Available Rooms</h2>
+            <ListGroup as="ul" key={item.roomnumber}>
+              <ListGroup.Item as="li" variant="secondary">
+                Room Number: {item.roomnumber}
+              </ListGroup.Item>
+              <ListGroup.Item as="li">Bedrooms: {item.bedrooms}</ListGroup.Item>
+              <ListGroup.Item as="li">
+                Maximum guests allowed: {item.maximumguests}
+              </ListGroup.Item>
+              <ListGroup.Item as="li">Price: {item.price} CAD</ListGroup.Item>
+              <Button
+                onClick={this.handleSubmit(item)}
+                variant="outline-success"
+              >
+                Choose
+              </Button>
+            </ListGroup>
+            <br></br>
+          </div>
         ))}
       </div>
     );

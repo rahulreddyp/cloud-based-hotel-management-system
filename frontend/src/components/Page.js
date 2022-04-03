@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Header";
 
-const Page = ({ className = "p-3 m-3", children }) => {
+const Page = ({ className = "p-3 mt-3", children }) => {
   return (
     <div>
       <Header />

@@ -6,12 +6,17 @@ import Profile from "./components/user_management/Profile";
 import SearchRoom from "./components/reservations/SearchRoom";
 import FetchRooms from "./components/reservations/Fetchrooms";
 import BookRoom from "./components/reservations/BookRoom";
-import BookFood from "./components/reservations/BookFood";
-import HouseKeeping from "./components/reservations/HouseKeeping";
+import BookFood from "./components/orderfood/BookFood";
+import HouseKeeping from "./components/housekeeping/HouseKeeping";
+import Page from "./components/Page"
+
 const Routes = () => {
-  return (    
-    <Router>     
+  return (  
+    <div style={{width:"60%",margin:"auto"}}>  
+    <Router> 
+  <Page/>
       <Switch>
+      {/* <Page>  */}
         <Route exact path="/" component={Signup} />
         <Route exact path="/login" component={Signin} />
         <Route path="/profile" component={Profile}/>
@@ -20,9 +25,11 @@ const Routes = () => {
         <Route exact path="/bookroom" component={BookRoom} />
         <Route exact path="/bookfood" component={BookFood} />
         <Route exact path="/housekeeping" component={HouseKeeping} />
-        
-      </Switch>      
-    </Router>    
+        {/* </Page>  */}
+      </Switch>  
+    </Router> 
+  </div>
+
   );
 };
 

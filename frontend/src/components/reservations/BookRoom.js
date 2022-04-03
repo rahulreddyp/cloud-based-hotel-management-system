@@ -1,6 +1,10 @@
 import React from "react";
 import { API } from "../../backend";
-import Button from 'react-bootstrap/Button';
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/esm/Card";
+import Dropdown from "react-bootstrap/Dropdown";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Form from "react-bootstrap/Form";
 class BookRoom extends React.Component {
   state = {
     roomnumber: this.props.location.state.roomnumber,
@@ -9,8 +13,8 @@ class BookRoom extends React.Component {
     date: new Date().toString(),
     idnumber: "",
     idname: "",
-    bookingconfirmation:"",
-    bookingid: ""
+    bookingconfirmation: "",
+    bookingid: "",
     // fromdate: this.props.location.state.fromdate,
     // todate: this.props.location.state.todate,
   };
@@ -23,95 +27,94 @@ class BookRoom extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const sendFormData = async () => {
-        const res = await fetch(
-          `${API}/bookroom`, 
-          {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(this.state),
-          }
-        );
-  
-        return await res.json();
-      };
-      sendFormData()
-        .then((data) => {
-          if(data.body){
-            this.setState({bookingconfirmation:"Successfully booked room"})
-            this.setState({bookingid:data.body})
+      const res = await fetch(`${API}/bookroom`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.state),
+      });
 
-          }else{
-            this.setState({bookingconfirmation:"Unable to book room, please try again"})
-          }
-        })
-        .catch((err) => console.log(err));
-    
-   
+      return await res.json();
+    };
+    sendFormData()
+      .then((data) => {
+        if (data.body) {
+          this.setState({ bookingconfirmation: "Successfully booked room" });
+          this.setState({ bookingid: data.body });
+          alert("Your booking is successful!...please proceed to choose food ");
+        } else {
+          this.setState({
+            bookingconfirmation: "Unable to book room, please try again",
+          });
+        }
+      })
+      .catch((err) => console.log(err));
   };
-  selectfood=(e)=>{
+  selectfood = (e) => {
     this.props.history.push("/bookfood", this.state);
     e.preventDefault();
-  }
+  };
   render() {
     const details = this.props.location.state;
 
     return (
-      <div>
-        <form onSubmit={(e) =>this.handleSubmit(e)}> 
+      <div style={{ width: "60%", margin: "auto" }}>
         <h2>Bookings Details</h2>
         <p>Room Number: {details.roomnumber}</p>
-        <input
-          type="text"
-          name="fullname"
-          placeholder="Fullname.."
-          onChange={this.handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="guests"
-          placeholder="Guests.."
-          onChange={this.handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="idname"
-          placeholder="Identity.."
-          onChange={this.handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="idnumber"
-          placeholder="Identity number.."
-          onChange={this.handleChange}
-          required
-        />
-        {/* <input
-          type="date"
-          name="fromdate"
-          placeholder="From date.."
-          onChange={this.handleChange}
-          required
-        /> */}
-        {/* <input
-          type="date"
-          name="todate"
-          placeholder="To date.."
-          onChange={this.handleChange}
-          required
-        /> */}
-        <input type="submit" value="Confirm Bookings"/>
-        {/* <p>Lastname: {details.lastname}</p> */}
-        {/* <p>Email: {details.email}</p>  */}
-        </form> 
-        <h6>{this.state.bookingconfirmation}</h6>
-        <p> {this.state.bookingid}</p>
-        <Button variant="outline-primary" onClick={this.selectfood}>Book Food</Button>
+        <Form onSubmit={(e) => this.handleSubmit(e)}>
+          <Form.Label>Fullname</Form.Label>
+          <Form.Control
+            type="text"
+            name="fullname"
+            placeholder="Fullname.."
+            onChange={this.handleChange}
+            required
+          />
+          <br></br>
+          <Form.Label>Guests</Form.Label>
+          <Form.Control
+            type="number"
+            name="guests"
+            placeholder="Guests.."
+            onChange={this.handleChange}
+            required
+          />
+          <br></br>
+          <Form.Label>Identity type</Form.Label>
+          <Form.Control
+            type="text"
+            name="idname"
+            placeholder="Identity.."
+            onChange={this.handleChange}
+            required
+          />
+          <br></br>
+          <Form.Label>Identity Number</Form.Label>
+          <Form.Control
+            type="number"
+            name="idnumber"
+            placeholder="Identity number.."
+            onChange={this.handleChange}
+            required
+          />
+          <br></br>
+          <div style={{ display: "flex" }}>
+            <div style={{ marginRight: "auto" }}>
+              <Button type="submit" value="Confirm Bookings">
+                Confirm Booking
+              </Button>
+            </div>
+            <Button
+              variant="primary"
+              onClick={this.selectfood}
+              disabled={!this.state.bookingid}
+            >
+              Order Food
+            </Button>
+          </div>
+        </Form>
       </div>
     );
   }
