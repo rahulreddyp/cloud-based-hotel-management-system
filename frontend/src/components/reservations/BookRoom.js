@@ -27,7 +27,7 @@ class BookRoom extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const sendFormData = async () => {
-      const res = await fetch(`${API}/bookroom`, {
+      const res = await fetch(`/bookroom`, {
         method: "POST",
         headers: {
           Accept: "application/json",

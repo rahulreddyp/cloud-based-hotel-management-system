@@ -18,7 +18,7 @@ export const signoutUser = async next => {
       next();
   
       try {
-            const res = await fetch(`${API}/signout`, {
+            const res = await fetch(`/signout`, {
                 method: "GET"
             });
             

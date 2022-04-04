@@ -53,7 +53,7 @@ class BookRoom extends React.Component {
 
   componentDidMount = (e) => {
     const sendFormData = async () => {
-      const res = await fetch(`${API}/bookfood`, {
+      const res = await fetch(`/bookfood`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -84,7 +84,7 @@ class BookRoom extends React.Component {
     };
 
     const sendFormData = async () => {
-      const res = await fetch(`${API}/confirmorder`, {
+      const res = await fetch(`/confirmorder`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -123,9 +123,9 @@ class BookRoom extends React.Component {
     console.log(e.target.value);
   };
   menulist = (e) => {
-    return this.state.menu.map((current) => {
+    return this.state.menu.map((current, index) => {
       return (
-        <EachItem
+        <EachItem key={index}
           item={current}
           onChange={(e) => this.handleChange(current.menuid, e)}
         />
