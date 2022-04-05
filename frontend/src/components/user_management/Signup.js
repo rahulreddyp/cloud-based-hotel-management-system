@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { API } from "../../backend";
 import Page from "../Page";
 
 const Signup = () => {
@@ -23,7 +22,7 @@ const Signup = () => {
 
   const SignupUser = async () => {
 
-      const response = await fetch(`${API}/signup`, {
+      const response = await fetch(`/signup`, {
         method: "POST",        
         // mode: 'no-cors',
         headers: {          

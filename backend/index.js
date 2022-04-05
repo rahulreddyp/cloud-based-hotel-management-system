@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const Cognito = require("./UserManagement/cognito");
+const SM = require("./secret-manager");
 const getrooms = require("./Reservations/getrooms");
 const bookroom = require("./Reservations/bookroom");
 const bookfood = require("./OrderFood/bookfood");
@@ -36,7 +37,12 @@ app.post("/signin", async (req, res) => {
     });
   } else {
     const result = await Cognito.signInUser(req.body);
-    console.log(result);
+
+    if(result.response) {
+      SM.storeUserInSecretManager(result.response);
+    }
+
+    // localStorage.setItem("user", result.response);
     // res.cookie('token', result.response.token.idToken, result.response.exp);
     return res.status(result.statusCode).json(result);
   }
@@ -58,6 +64,20 @@ app.post("/fetchdata", async (req, res) => {
       return res;
     });
   }
+});
+
+app.get("/getuser", async (req, res) => {
+  SM.getUserInSecretManager()
+    .then((user) => {
+      return res.status(200).json({user
+      });
+    })
+    .catch((err) => {
+      return res.status(422).json({
+        error: "Failed to fetch JSON body",
+        err,
+      });
+    });
 });
 
 app.post("/bookroom", async (req, res) => {
@@ -94,7 +114,6 @@ app.post("/confirmorder", async (req, res) => {
   }
 });
 
-
 app.post("/housekeeping", async (req, res) => {
   if (!req.body) {
     console.log("Error, no JSON body");
@@ -111,10 +130,6 @@ app.post("/housekeeping", async (req, res) => {
     });
   }
 });
-
-
-
-
 
 app.get("/bookfood", (req, res) => {
   if (!req.body) {

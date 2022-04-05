@@ -1,9 +1,6 @@
 import React from "react";
 import { API } from "../../backend";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/esm/Card";
-import Dropdown from "react-bootstrap/Dropdown";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Form from "react-bootstrap/Form";
 
 class HouseKeeping extends React.Component {
@@ -18,7 +15,7 @@ class HouseKeeping extends React.Component {
   handleSubmit = (e) => {
     console.log(this.state.time);
     const sendFormData = async () => {
-      const res = await fetch(`${API}/housekeeping`, {
+      const res = await fetch(`/housekeeping`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -31,7 +28,9 @@ class HouseKeeping extends React.Component {
     };
     sendFormData()
       .then((data) => {
+        console.log(data.body);
         if (data.body) {
+
           console.log("success housekeeping");
           alert("Housekeeping booked");
           this.props.history.push("/",this.state.bookingid);

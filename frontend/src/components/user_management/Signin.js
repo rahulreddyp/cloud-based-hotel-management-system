@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { API } from "../../backend";
 import Page from "../Page";
 
 const Signin = () => {
@@ -49,7 +48,7 @@ const Signin = () => {
   };
 
   const SigninUser = async (data) => {
-    const response = await fetch(`${API}/signin`, {
+    const response = await fetch(`/signin`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -62,7 +61,7 @@ const Signin = () => {
 
   const authenticateUser = (data, next) => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("token", JSON.stringify(data.token));
+      localStorage.setItem("token", JSON.stringify(data.response.token.idToken));
       next();
     }
   };

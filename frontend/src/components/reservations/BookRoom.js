@@ -1,12 +1,10 @@
 import React from "react";
 import { API } from "../../backend";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/esm/Card";
-import Dropdown from "react-bootstrap/Dropdown";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Form from "react-bootstrap/Form";
 class BookRoom extends React.Component {
   state = {
+    user: "",
     roomnumber: this.props.location.state.roomnumber,
     fullname: "",
     guests: "",
@@ -19,6 +17,27 @@ class BookRoom extends React.Component {
     // todate: this.props.location.state.todate,
   };
 
+  componentDidMount = () => {
+    const getLoggedInUser = async () => {
+      const res = await fetch(`/getuser`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      return await res.json();
+    };
+
+    getLoggedInUser()
+      .then((data) => {
+        console.log('sm', data.user.email);
+        const email = data.user.email
+        this.setState({ user: email });
+      })
+      .catch((err) => console.log(err));
+  };
+
   handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
@@ -27,7 +46,7 @@ class BookRoom extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const sendFormData = async () => {
-      const res = await fetch(`${API}/bookroom`, {
+      const res = await fetch(`/bookroom`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -61,6 +80,7 @@ class BookRoom extends React.Component {
 
     return (
       <div style={{ width: "60%", margin: "auto" }}>
+        <span>Hi {this.state.user}</span>
         <h2>Bookings Details</h2>
         <p>Room Number: {details.roomnumber}</p>
         <Form onSubmit={(e) => this.handleSubmit(e)}>

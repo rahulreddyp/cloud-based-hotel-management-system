@@ -74,40 +74,45 @@ exports.registerUser = async (data) => {
 };
 
 exports.signInUser = async (data) => {
-    return new Promise((resolve) => {
-        
-        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+  return new Promise((resolve) => {
+    const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-        const userData = {
-            Username: data.email,
-            Pool: userPool
-        }
+    const userData = {
+      Username: data.email,
+      Pool: userPool,
+    };
 
-        const authDetails = {
-            Username: data.email,
-            Password: data.password
-        };
-        
-        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+    const authDetails = {
+      Username: data.email,
+      Password: data.password,
+    };
 
-    cognitoUser.authenticateUser(new AmazonCognitoIdentity.AuthenticationDetails(authDetails), {
+    const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+    cognitoUser.authenticateUser(
+      new AmazonCognitoIdentity.AuthenticationDetails(authDetails),
+      {
         onSuccess: (result) => {
-            const token = {
-              accessToken: result.getAccessToken().getJwtToken(),
-              idToken: result.getIdToken().getJwtToken(),
-              refreshToken: result.getRefreshToken().getToken(),
-            }  
-            return resolve({ statusCode: 200, response: decodeToken(token)});
-          },
-          
-          onFailure: (err) => {
-            return resolve({ statusCode: 422, error: err.message || JSON.stringify(err)});
-          },
-    });
-});
-}
+          const token = {
+            accessToken: result.getAccessToken().getJwtToken(),
+            idToken: result.getIdToken().getJwtToken(),
+            refreshToken: result.getRefreshToken().getToken(),
+          };
+          return resolve({ statusCode: 200, response: decodeToken(token) });
+        },
+
+        onFailure: (err) => {
+          return resolve({
+            statusCode: 422,
+            error: err.message || JSON.stringify(err),
+          });
+        },
+      }
+    );
+  });
+};
 
 const decodeToken = (token) => {
-    const { email, exp, auth_time , token_use, sub } = jwt_decode(token.idToken);    
-    return { token, email, exp, uid: sub, auth_time, token_use };
-}
+  const { email, exp, auth_time, token_use, sub } = jwt_decode(token.idToken);
+  return { token, email, exp, uid: sub, auth_time, token_use };
+};

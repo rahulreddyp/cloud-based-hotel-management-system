@@ -2,8 +2,6 @@ import React from "react";
 import { API } from "../../backend";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/esm/Card";
-import Dropdown from "react-bootstrap/Dropdown";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Form from "react-bootstrap/Form";
 
 const EachItem = (props) => (
@@ -53,7 +51,7 @@ class BookRoom extends React.Component {
 
   componentDidMount = (e) => {
     const sendFormData = async () => {
-      const res = await fetch(`${API}/bookfood`, {
+      const res = await fetch(`/bookfood`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -84,7 +82,7 @@ class BookRoom extends React.Component {
     };
 
     const sendFormData = async () => {
-      const res = await fetch(`${API}/confirmorder`, {
+      const res = await fetch(`/confirmorder`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -123,9 +121,9 @@ class BookRoom extends React.Component {
     console.log(e.target.value);
   };
   menulist = (e) => {
-    return this.state.menu.map((current) => {
+    return this.state.menu.map((current, index) => {
       return (
-        <EachItem
+        <EachItem key={index}
           item={current}
           onChange={(e) => this.handleChange(current.menuid, e)}
         />
