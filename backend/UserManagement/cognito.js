@@ -45,8 +45,6 @@ exports.registerUser = async (data) => {
 
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-    console.log(data);
-
     userPool.signUp(
       data.email,
       data.password,

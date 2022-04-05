@@ -157,6 +157,7 @@ app.get("/bookinghistory/:mail", (req, res) => {
     });
   } else {
     bookinghistory.bookinghistory(req.params.mail, function (result) {
+      console.log(result);
       res.status(200).json({
         body: result,
       });

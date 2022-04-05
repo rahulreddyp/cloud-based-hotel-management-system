@@ -12,26 +12,25 @@ AWS.config.update({
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 function bookinghistory(userData, callback) {
-    console.log(userData);
     var params = {
         TableName: "Bookings",
         FilterExpression: "email = :useremail",
         
         ExpressionAttributeValues: {
-             ":useremail": "bommera@gmail.com"
+             ":useremail": userData
         }
         
     }
-    // docClient.scan(params, function(err,data){
-    //     if (err) {
-    //         console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
-    //     callback(err)
+    docClient.scan(params, function(err,data){
+        if (err) {
+            console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+        callback(err)
 
-    //     } else {
-    //         callback(data);
+        } else {
+            callback(data);
 
-    //     }
-    // });
+        }
+    });
     
 
 }
