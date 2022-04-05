@@ -77,7 +77,6 @@ const Signup = () => {
 
   return (
     <Page>
-    {/* <div className="container"> */}
       <div className="mt-8 justify-content-center">
       <h2 className="text-center">Signup Here..</h2>
         <span className="text-danger text-center">{values.message}</span>
@@ -153,7 +152,6 @@ const Signup = () => {
             </div>
           </form>
         </div>
-      {/* </div> */}
     </Page>
   );
 };
