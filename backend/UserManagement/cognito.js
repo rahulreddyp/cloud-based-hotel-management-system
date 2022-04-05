@@ -28,6 +28,7 @@ const attributes = (key, value) => {
   };
 };
 
+// AWS Cognito SDK Reference: https://www.npmjs.com/package/amazon-cognito-identity-js
 exports.registerUser = async (data) => {
   return new Promise((resolve, reject) => {
     let attributeList = [];

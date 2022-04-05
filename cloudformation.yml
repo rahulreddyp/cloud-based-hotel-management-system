@@ -5,6 +5,7 @@ Parameters:
   KeyName:
     Type: AWS::EC2::KeyPair::KeyName
 
+  # VPC Template Reference: https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html
   PublicSubnet1CIDR:
     Description: Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone
     Type: String
@@ -87,6 +88,7 @@ Resources:
   #     TemplateName: DefaultConfiguration
       # VersionLabel: "Initial Version"
 
+# VPC Template Reference: https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html
   VPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -163,7 +165,7 @@ Resources:
           ToPort: 443
           CidrIp: 0.0.0.0/0
 
-
+  # EC2 Template Reference: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-ec2.html
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
@@ -197,7 +199,7 @@ Resources:
           sudo yum install git -y
 
           
-  # # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+        # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 
   ElasticIp:
     Type: AWS::EC2::EIP
