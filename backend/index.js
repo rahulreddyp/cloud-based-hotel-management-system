@@ -148,7 +148,7 @@ app.get("/bookfood", (req, res) => {
   return res;
 });
 
-app.get("/bookinghistory", (req, res) => {
+app.get("/bookinghistory/:mail", (req, res) => {
   if (!req.body) {
     console.log("Error, no JSON body");
 
@@ -156,7 +156,7 @@ app.get("/bookinghistory", (req, res) => {
       error: "Failed to fetch JSON body",
     });
   } else {
-    bookinghistory.bookinghistory(req.body, function (result) {
+    bookinghistory.bookinghistory(req.params.mail, function (result) {
       res.status(200).json({
         body: result,
       });
