@@ -35,6 +35,7 @@ exports.registerUser = async (data) => {
 
     attributeList.push(attributes("email", data.email));
     attributeList.push(attributes("phone_number", data.phone));
+    // attributeList.push(attributes("name", name));
 
     attributeList.forEach((element) => {
       cognitoAttributeList.push(
@@ -43,6 +44,8 @@ exports.registerUser = async (data) => {
     });
 
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+    console.log(data);
 
     userPool.signUp(
       data.email,

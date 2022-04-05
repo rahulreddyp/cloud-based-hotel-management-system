@@ -27,7 +27,7 @@ class SearchRoom extends React.Component {
   render() {
     return (
       <div className="container">
-        <Button onClick={this.previoushistory}>Previous history</Button>
+        <Button onClick={this.previoushistory}>My Bookings</Button>
         <h3>Search Rooms</h3>
         <Form onSubmit={this.handleSubmit}>
           <div className="input-block">
