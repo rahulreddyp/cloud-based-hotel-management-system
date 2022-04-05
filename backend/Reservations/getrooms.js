@@ -28,7 +28,6 @@ function getrooms(userData, callback) {
     if (err) {
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
-      console.log("Query succeeded.");
       // console.log(data.Items.length);
       // var availflag = true;
 

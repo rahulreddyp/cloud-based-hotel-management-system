@@ -62,7 +62,7 @@ const Signin = () => {
 
   const authenticateUser = (data, next) => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("token", JSON.stringify(data.token));
+      localStorage.setItem("token", JSON.stringify(data.response.token.idToken));
       next();
     }
   };

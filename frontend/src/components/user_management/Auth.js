@@ -4,9 +4,9 @@ export const isLoggedIn = () => {
     if (typeof window == "undefined") {
       return false;
     }
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("token"));
     if (user) {
-      return user.token;
+      return user;
     } else {
       return false;
     }

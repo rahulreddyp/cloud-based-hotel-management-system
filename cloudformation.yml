@@ -161,24 +161,6 @@ Resources:
         - 
           AttributeName: "bookingid"
           AttributeType: "S"
-        # -
-        #   AttributeName: "idname"
-        #   AttributeType: "S"
-        # - 
-        #   AttributeName: "date"
-        #   AttributeType: "S"  
-        # - 
-        #   AttributeName: "roomnumber"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "idnumber"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "guests"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "fullname"
-        #   AttributeType: "S"
       KeySchema: 
         - 
           AttributeName: "bookingid"
@@ -195,18 +177,6 @@ Resources:
         - 
           AttributeName: "roomnumber"
           AttributeType: "N"
-        # - 
-        #   AttributeName: "price"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "maxguests"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "bedrooms"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "availability"
-        #   AttributeType: "B"
       KeySchema: 
         - 
           AttributeName: "roomnumber"
@@ -224,9 +194,6 @@ Resources:
         - 
           AttributeName: "Bookingid"
           AttributeType: "S"
-        # - 
-        #   AttributeName: "orderdetails"
-        #   AttributeType: "L"
       KeySchema: 
         - 
           AttributeName: "Bookingid"
@@ -243,15 +210,6 @@ Resources:
         - 
           AttributeName: "menuid"
           AttributeType: "N"
-        # - 
-        #   AttributeName: "mealtype"
-        #   AttributeType: "S"
-        # - 
-        #   AttributeName: "Name"
-        #   AttributeType: "S"
-        # - 
-        #   AttributeName: "fooditems"
-        #   AttributeType: "S"
       KeySchema: 
         - 
           AttributeName: "menuid"
@@ -268,12 +226,6 @@ Resources:
         - 
           AttributeName: "Bookingid"
           AttributeType: "S"
-        # - 
-        #   AttributeName: "time"
-        #   AttributeType: "S"
-        # - 
-        #   AttributeName: "housekeeper"
-        #   AttributeType: "S"
       KeySchema: 
         - 
           AttributeName: "Bookingid"
