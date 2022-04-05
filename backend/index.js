@@ -9,6 +9,7 @@ const bookroom = require("./Reservations/bookroom");
 const bookfood = require("./OrderFood/bookfood");
 const confirmorder = require("./OrderFood/confirmorder");
 const housekeeping = require("./HouseKeeping/housekeeping");
+const bookinghistory = require("./BookingHistory/bookinghistory");
 const cors = require("cors");
 const app = express();
 
@@ -139,6 +140,23 @@ app.get("/bookfood", (req, res) => {
     });
   } else {
     bookfood.bookfood(req.body, function (result) {
+      res.status(200).json({
+        body: result,
+      });
+    });
+  }
+  return res;
+});
+
+app.get("/bookinghistory", (req, res) => {
+  if (!req.body) {
+    console.log("Error, no JSON body");
+
+    res.status(422).json({
+      error: "Failed to fetch JSON body",
+    });
+  } else {
+    bookinghistory.bookinghistory(req.body, function (result) {
       res.status(200).json({
         body: result,
       });
