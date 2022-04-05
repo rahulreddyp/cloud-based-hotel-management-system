@@ -9,6 +9,7 @@ import BookRoom from "./components/reservations/BookRoom";
 import BookFood from "./components/orderfood/BookFood";
 import HouseKeeping from "./components/housekeeping/HouseKeeping";
 import Page from "./components/Page"
+import BookingHistory from "./components/bookinghistory/BookingHistory";
 
 const Routes = () => {
   return (  
@@ -25,6 +26,8 @@ const Routes = () => {
         <Route exact path="/bookroom" component={BookRoom} />
         <Route exact path="/bookfood" component={BookFood} />
         <Route exact path="/housekeeping" component={HouseKeeping} />
+        <Route exact path="/bookinghistory" component={BookingHistory} />
+        
         {/* </Page>  */}
       </Switch>  
     </Router> 

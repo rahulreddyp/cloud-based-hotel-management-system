@@ -26,6 +26,7 @@ function bookroom(userData, callback) {
       date: userData.date,
       idnumber: userData.idnumber,
       idname: userData.idname,
+      email: userData.user
     },
     // ReturnConsumedCapacity: 'INDEXES'
   };
