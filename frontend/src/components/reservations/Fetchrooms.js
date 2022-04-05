@@ -1,10 +1,7 @@
 import React from "react";
 import { API } from "../../backend";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/esm/Card";
-import Dropdown from "react-bootstrap/Dropdown";
 import ListGroup from "react-bootstrap/ListGroup";
-import Form from "react-bootstrap/Form";
 
 class FetchRooms extends React.Component {
   constructor(props) {

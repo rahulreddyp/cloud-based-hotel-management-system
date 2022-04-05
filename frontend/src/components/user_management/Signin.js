@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { API } from "../../backend";
 import Page from "../Page";
 
 const Signin = () => {

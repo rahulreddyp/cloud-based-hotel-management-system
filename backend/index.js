@@ -42,7 +42,6 @@ app.post("/signin", async (req, res) => {
     }
 
     // localStorage.setItem("user", result.response);
-
     // res.cookie('token', result.response.token.idToken, result.response.exp);
     return res.status(result.statusCode).json(result);
   }

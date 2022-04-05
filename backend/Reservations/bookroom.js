@@ -33,7 +33,6 @@ function bookroom(userData, callback) {
   docClient.put(params1, function (err, data) {
     if (err) console.log(err);
     else {
-      // console.log(data)
       var params2 = {
         TableName: "Rooms",
         Key: {

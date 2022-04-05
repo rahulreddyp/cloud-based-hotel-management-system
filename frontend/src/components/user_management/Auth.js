@@ -1,4 +1,3 @@
-import { API } from "../../backend";
 
 export const isLoggedIn = () => {
     if (typeof window == "undefined") {

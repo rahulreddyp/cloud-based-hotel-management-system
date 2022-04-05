@@ -16,7 +16,7 @@ Resources:
   #   Type: AWS::Cognito::UserPool
   #   Properties:
   #     AdminCreateUserConfig:
-  #       AllowAdminCreateUserOnly: true
+  #       AllowAdminCreateUserOnly: false
   #     UserPoolName: Skyline-UserPool
   #     UsernameAttributes:
   #       - email
@@ -29,6 +29,21 @@ Resources:
   #     UserPoolId: !Ref UserPool
   #     ExplicitAuthFlows:
   #       - ADMIN_NO_SRP_AUTH
+
+  ElasticBeanstalkApp:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName: frontend
+      Description: AWS Elastic Beanstalk application for frontend
+
+  Environment:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties: 
+      ApplicationName: !Ref ElasticBeanstalkApp
+        Description: "AWS Elastic Beanstalk Environment running Sample Application"
+      EnvironmentName: frontend-env
+      TemplateName: DefaultConfiguration
+      VersionLabel: "Initial Version"
 
   VPC:
     Type: AWS::EC2::VPC
