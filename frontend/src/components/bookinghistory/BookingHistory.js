@@ -1,6 +1,6 @@
 import React from "react";
 import { API } from "../../backend";
-import Button from 'react-bootstrap/Button';
+import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/esm/Card";
 import Dropdown from "react-bootstrap/Dropdown";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
@@ -8,7 +8,8 @@ import Form from "react-bootstrap/Form";
 
 class BookingHistory extends React.Component {
   state = {
-    mail:"bommera@gmail.com"
+    mail: JSON.parse(localStorage.getItem("email")),
+    historydata: [],
   };
   componentDidMount() {
     const gethistory = async () => {
@@ -28,9 +29,8 @@ class BookingHistory extends React.Component {
     };
     gethistory()
       .then((data) => {
-          console.log(data.body);
         this.setState({
-          historydata: data.body
+          historydata: data.body.Items,
         });
       })
       .catch((err) => console.log(err));
@@ -45,9 +45,32 @@ class BookingHistory extends React.Component {
   };
   render() {
     return (
-      <div className="container">
-        <h3>Booking history</h3>
-
+      <div className="container">        
+        {this.state.historydata.map((data, index) => (
+          <div
+            key={index}
+            style={{ width: "60%", margin: "auto", textAlign: "center" }}
+          >
+            <h3>Booking history</h3>
+            <Card>
+              <Card.Header>                
+                <div style={{ display: "flex" }}>
+                  <Card.Title style={{ marginRight: "auto" }}>
+                  Id: {data.bookingid}
+                  </Card.Title>
+                  <Card.Subtitle>Guests: {data.guests}</Card.Subtitle>
+                </div>
+              </Card.Header>
+              <Card.Body>
+              <span>Guest name: {data.fullname} </span>
+                <Card.Text>                  
+                  {data.date}                 
+                </Card.Text>
+                <span>Room: {data.roomnumber} </span>
+              </Card.Body>
+            </Card>
+          </div>
+        ))}
       </div>
     );
   }
