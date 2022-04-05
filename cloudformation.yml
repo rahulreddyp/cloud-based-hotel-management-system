@@ -10,17 +10,41 @@ Parameters:
     Type: String
     Default: 10.0.0.0/16 
 
-Resources:
+  # CognitoUserPoolName:
+  #   Description: Please enter the user pool name for Cognito
+  #   Type: String   
+  #   Default:  Skyline-UserPool
 
+Resources:
   # UserPool:
   #   Type: AWS::Cognito::UserPool
   #   Properties:
   #     AdminCreateUserConfig:
-  #       AllowAdminCreateUserOnly: true
-  #     UserPoolName: Skyline-UserPool
+  #       AllowAdminCreateUserOnly: false 
+  #     EmailConfiguration:
+  #       EmailSendingAccount: COGNITO_DEFAULT  
+  #     VerificationMessageTemplate:
+  #       EmailSubjectByLink: 'Skyline: Your verification code' 
+  #       DefaultEmailOption: CONFIRM_WITH_LINK        
+  #     Schema:
+  #       - Name: name
+  #         AttributeDataType: String
+  #         Required: true
+  #         Mutable: true
+  #       - Name: email
+  #         AttributeDataType: String
+  #         Required: true
+  #         Mutable: false
+  #       - Name: phone_number
+  #         Required: true
+  #         Mutable: false     
+  #     UserPoolName: !Ref CognitoUserPoolName
   #     UsernameAttributes:
   #       - email
-  #       - phone
+  #       - phone_number
+  #     UsernameConfiguration:
+  #       CaseSensitive: false
+
   # UserPoolClient:
   #   Type: AWS::Cognito::UserPoolClient
   #   Properties:
@@ -30,259 +54,244 @@ Resources:
   #     ExplicitAuthFlows:
   #       - ADMIN_NO_SRP_AUTH
 
-  VPC:
-    Type: AWS::EC2::VPC
+  # UserPoolDomain:
+  #   Type: AWS::Cognito::UserPoolDomain
+  #   Properties: 
+  #     Domain: "skyline"
+  #     UserPoolId: !Ref UserPool
+
+
+  ElasticBeanstalkApp:
+    Type: AWS::ElasticBeanstalk::Application
     Properties:
-      CidrBlock: 10.0.0.0/16
-      EnableDnsSupport: 'true'
-      EnableDnsHostnames: 'true'
-      Tags:
-      - Key: Name
-        Value: vpc
+      ApplicationName: sample
+      Description: AWS Elastic Beanstalk application for frontend
 
-  InternetGateway:
-    Type: AWS::EC2::InternetGateway
+  Environment:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties: 
+      ApplicationName: !Ref ElasticBeanstalkApp
+        Description: "AWS Elastic Beanstalk Environment running Sample Application"
+      EnvironmentName: sample-env
+      TemplateName: DefaultConfiguration
+      VersionLabel: "Initial Version"
 
-  InternetGatewayAttachment:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties:
-      InternetGatewayId: !Ref InternetGateway
-      VpcId: !Ref VPC
+  # VPC:
+  #   Type: AWS::EC2::VPC
+  #   Properties:
+  #     CidrBlock: 10.0.0.0/16
+  #     EnableDnsSupport: 'true'
+  #     EnableDnsHostnames: 'true'
+  #     Tags:
+  #     - Key: Name
+  #       Value: vpc
 
-  PublicSubnet1:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref VPC
-      AvailabilityZone: !Select [ 0, !GetAZs '' ]
-      CidrBlock: !Ref PublicSubnet1CIDR
-      MapPublicIpOnLaunch: true        
+  # InternetGateway:
+  #   Type: AWS::EC2::InternetGateway
 
-  # NatGateway1EIP:
-  #   Type: AWS::EC2::EIP
+  # InternetGatewayAttachment:
+  #   Type: AWS::EC2::VPCGatewayAttachment
+  #   Properties:
+  #     InternetGatewayId: !Ref InternetGateway
+  #     VpcId: !Ref VPC
+
+  # PublicSubnet1:
+  #   Type: AWS::EC2::Subnet
+  #   Properties:
+  #     VpcId: !Ref VPC
+  #     AvailabilityZone: !Select [ 0, !GetAZs '' ]
+  #     CidrBlock: !Ref PublicSubnet1CIDR
+  #     MapPublicIpOnLaunch: true        
+
+  # # NatGateway1EIP:
+  # #   Type: AWS::EC2::EIP
+  # #   DependsOn: InternetGatewayAttachment
+  # #   Properties:
+  # #     Domain: vpc     
+
+  # PublicRouteTable:
+  #   Type: AWS::EC2::RouteTable
+  #   Properties:
+  #     VpcId: !Ref VPC
+  #     Tags:
+  #       - Key: Name
+  #         Value: Public Routes
+
+  # DefaultPublicRoute:
+  #   Type: AWS::EC2::Route
   #   DependsOn: InternetGatewayAttachment
   #   Properties:
-  #     Domain: vpc     
+  #     RouteTableId: !Ref PublicRouteTable
+  #     DestinationCidrBlock: 0.0.0.0/0
+  #     GatewayId: !Ref InternetGateway
 
-  PublicRouteTable:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: Public Routes
-
-  DefaultPublicRoute:
-    Type: AWS::EC2::Route
-    DependsOn: InternetGatewayAttachment
-    Properties:
-      RouteTableId: !Ref PublicRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
-
-  PublicSubnet1RouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      RouteTableId: !Ref PublicRouteTable
-      SubnetId: !Ref PublicSubnet1
+  # PublicSubnet1RouteTableAssociation:
+  #   Type: AWS::EC2::SubnetRouteTableAssociation
+  #   Properties:
+  #     RouteTableId: !Ref PublicRouteTable
+  #     SubnetId: !Ref PublicSubnet1
  
 
-  EC2SecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: SG with port 22, 80 and 443 inbound
-      GroupName: server
-      VpcId: !Ref VPC
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
+  # EC2SecurityGroup:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     GroupDescription: SG with port 22, 80 and 443 inbound
+  #     GroupName: server
+  #     VpcId: !Ref VPC
+  #     SecurityGroupIngress:
+  #       - IpProtocol: tcp
+  #         FromPort: 22
+  #         ToPort: 22
+  #         CidrIp: 0.0.0.0/0
+  #       - IpProtocol: tcp
+  #         FromPort: 80
+  #         ToPort: 80
+  #         CidrIp: 0.0.0.0/0
+  #       - IpProtocol: tcp
+  #         FromPort: 443
+  #         ToPort: 443
+  #         CidrIp: 0.0.0.0/0
 
 
-  EC2Instance:
-    Type: AWS::EC2::Instance
-    Properties:
-      ImageId: ami-0c02fb55956c7d316
-      InstanceType: t2.nano
-      KeyName: !Ref KeyName
-      SecurityGroupIds:
-        - !GetAtt EC2SecurityGroup.GroupId
-      # !Join [',' !GetAtt EC2SecurityGroup.GroupId]
-      # SecurityGroups:
-      #   - !Ref EC2SecurityGroup
-      SubnetId: !Ref PublicSubnet1
+  # EC2Instance:
+  #   Type: AWS::EC2::Instance
+  #   Properties:
+  #     ImageId: ami-0c02fb55956c7d316
+  #     InstanceType: t2.nano
+  #     KeyName: !Ref KeyName
+  #     SecurityGroupIds:
+  #       - !GetAtt EC2SecurityGroup.GroupId
+  #     # !Join [',' !GetAtt EC2SecurityGroup.GroupId]
+  #     # SecurityGroups:
+  #     #   - !Ref EC2SecurityGroup
+  #     SubnetId: !Ref PublicSubnet1
 
-      Tags:
-        - Key: Name
-          Value: backend
-      UserData:
-        Fn::Base64: |
-          #!/bin/bash
-          yum update -y
-          curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
+  #     Tags:
+  #       - Key: Name
+  #         Value: backend
+  #     UserData:
+  #       Fn::Base64: |
+  #         #!/bin/bash
+  #         yum update -y
+  #         curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
 
-          yum install nodejs -y
+  #         yum install nodejs -y
 
-          sudo amazon-linux-extras install nginx1 -y
+  #         sudo amazon-linux-extras install nginx1 -y
 
-          sudo systemctl restart nginx
+  #         sudo systemctl restart nginx
 
-          git clone https://git.cs.dal.ca/rrp/csci5409_project_group58.git
+  #         sudo chown -R $USER:$USER .
 
-          cd backend
+  #         sudo yum install git -y
 
-          npm install
+  #         git clone https://git.cs.dal.ca/rrp/csci5409_project_group58.git
+
+  #         cd csci5409_project_group58/backend
+
+  #         npm install
           
 
-  # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+  # # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 
-  ElasticIp:
-    Type: AWS::EC2::EIP
-    Properties:
-      InstanceId: !Ref EC2Instance
-      Domain: vpc
+  # ElasticIp:
+  #   Type: AWS::EC2::EIP
+  #   Properties:
+  #     InstanceId: !Ref EC2Instance
+  #     Domain: vpc
 
-  BookingsTable: 
-    Type: AWS::DynamoDB::Table
-    Properties: 
-      AttributeDefinitions: 
-        - 
-          AttributeName: "bookingid"
-          AttributeType: "S"
-        # -
-        #   AttributeName: "idname"
-        #   AttributeType: "S"
-        # - 
-        #   AttributeName: "date"
-        #   AttributeType: "S"  
-        # - 
-        #   AttributeName: "roomnumber"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "idnumber"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "guests"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "fullname"
-        #   AttributeType: "S"
-      KeySchema: 
-        - 
-          AttributeName: "bookingid"
-          KeyType: "HASH"
-      ProvisionedThroughput: 
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
-      TableName: "Bookings"
+  # BookingsTable: 
+  #   Type: AWS::DynamoDB::Table
+  #   Properties: 
+  #     AttributeDefinitions: 
+  #       - 
+  #         AttributeName: "bookingid"
+  #         AttributeType: "S"
+  #     KeySchema: 
+  #       - 
+  #         AttributeName: "bookingid"
+  #         KeyType: "HASH"
+  #     ProvisionedThroughput: 
+  #       ReadCapacityUnits: "5"
+  #       WriteCapacityUnits: "5"
+  #     TableName: "Bookings"
 
-  RoomsTable: 
-    Type: AWS::DynamoDB::Table
-    Properties: 
-      AttributeDefinitions: 
-        - 
-          AttributeName: "roomnumber"
-          AttributeType: "N"
-        # - 
-        #   AttributeName: "price"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "maxguests"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "bedrooms"
-        #   AttributeType: "N"
-        # - 
-        #   AttributeName: "availability"
-        #   AttributeType: "B"
-      KeySchema: 
-        - 
-          AttributeName: "roomnumber"
-          KeyType: "HASH"
-      ProvisionedThroughput: 
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
-      TableName: "Rooms"
+  # RoomsTable: 
+  #   Type: AWS::DynamoDB::Table
+  #   Properties: 
+  #     AttributeDefinitions: 
+  #       - 
+  #         AttributeName: "roomnumber"
+  #         AttributeType: "N"
+  #     KeySchema: 
+  #       - 
+  #         AttributeName: "roomnumber"
+  #         KeyType: "HASH"
+  #     ProvisionedThroughput: 
+  #       ReadCapacityUnits: "5"
+  #       WriteCapacityUnits: "5"
+  #     TableName: "Rooms"
 
 
-  OrdersTable: 
-    Type: AWS::DynamoDB::Table
-    Properties: 
-      AttributeDefinitions: 
-        - 
-          AttributeName: "Bookingid"
-          AttributeType: "S"
-        # - 
-        #   AttributeName: "orderdetails"
-        #   AttributeType: "L"
-      KeySchema: 
-        - 
-          AttributeName: "Bookingid"
-          KeyType: "HASH"
-      ProvisionedThroughput: 
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
-      TableName: "Orders"
+  # OrdersTable: 
+  #   Type: AWS::DynamoDB::Table
+  #   Properties: 
+  #     AttributeDefinitions: 
+  #       - 
+  #         AttributeName: "Bookingid"
+  #         AttributeType: "S"
+  #     KeySchema: 
+  #       - 
+  #         AttributeName: "Bookingid"
+  #         KeyType: "HASH"
+  #     ProvisionedThroughput: 
+  #       ReadCapacityUnits: "5"
+  #       WriteCapacityUnits: "5"
+  #     TableName: "Orders"
 
-  FoodTable: 
-    Type: AWS::DynamoDB::Table
-    Properties: 
-      AttributeDefinitions: 
-        - 
-          AttributeName: "menuid"
-          AttributeType: "N"
-        # - 
-        #   AttributeName: "mealtype"
-        #   AttributeType: "S"
-        # - 
-        #   AttributeName: "Name"
-        #   AttributeType: "S"
-        # - 
-        #   AttributeName: "fooditems"
-        #   AttributeType: "S"
-      KeySchema: 
-        - 
-          AttributeName: "menuid"
-          KeyType: "HASH"
-      ProvisionedThroughput: 
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
-      TableName: "Food"
+  # FoodTable: 
+  #   Type: AWS::DynamoDB::Table
+  #   Properties: 
+  #     AttributeDefinitions: 
+  #       - 
+  #         AttributeName: "menuid"
+  #         AttributeType: "N"
+  #     KeySchema: 
+  #       - 
+  #         AttributeName: "menuid"
+  #         KeyType: "HASH"
+  #     ProvisionedThroughput: 
+  #       ReadCapacityUnits: "5"
+  #       WriteCapacityUnits: "5"
+  #     TableName: "Food"
 
-  HouseKeepingTable: 
-    Type: AWS::DynamoDB::Table
-    Properties: 
-      AttributeDefinitions: 
-        - 
-          AttributeName: "Bookingid"
-          AttributeType: "S"
-        # - 
-        #   AttributeName: "time"
-        #   AttributeType: "S"
-        # - 
-        #   AttributeName: "housekeeper"
-        #   AttributeType: "S"
-      KeySchema: 
-        - 
-          AttributeName: "Bookingid"
-          KeyType: "HASH"
-      ProvisionedThroughput: 
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
-      TableName: "HouseKeeping"
+  # HouseKeepingTable: 
+  #   Type: AWS::DynamoDB::Table
+  #   Properties: 
+  #     AttributeDefinitions: 
+  #       - 
+  #         AttributeName: "Bookingid"
+  #         AttributeType: "S"
+  #     KeySchema: 
+  #       - 
+  #         AttributeName: "Bookingid"
+  #         KeyType: "HASH"
+  #     ProvisionedThroughput: 
+  #       ReadCapacityUnits: "5"
+  #       WriteCapacityUnits: "5"
+  #     TableName: "HouseKeeping"
     
 Outputs:
-  VPCID:
-    Description: The VPC ID
-    Value: !Ref VPC
-  EC2ID:
-    Description: The EC2 Instance Public IPV4
-    Value: !Ref ElasticIp
+  # UserPoolId:
+  #   Value: !Ref UserPool
+  # UserPoolClientId:
+  #   Value: !Ref UserPoolClient  
+  # VPCID:
+  #   Description: The VPC ID
+  #   Value: !Ref VPC
+  # PublicSubnet_ID:
+  #   Description: The Public Subnet ID
+  #   Value: !Ref PublicSubnet1
+  # EC2_ID:
+  #   Description: The EC2 Instance Public IPV4
+  #   Value: !Ref ElasticIp

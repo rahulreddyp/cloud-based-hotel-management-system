@@ -15,7 +15,7 @@ function confirmorder(userData, callback) {
   var params = {
     TableName: "Orders",
     Item: {
-      BookingId: userData.bookingid,
+      Bookingid: userData.bookingid,
       orderdetails: userData.orders,
     },
   };

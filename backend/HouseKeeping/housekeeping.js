@@ -17,7 +17,7 @@ function housekeeping(userData, callback) {
         TableName: "HouseKeeping",
         Item: {
         housekeeper: housekeeper,
-          BookingId: userData.bookingid,
+          Bookingid: userData.bookingid,
           time: userData.time,
         },
       };
@@ -27,7 +27,7 @@ function housekeeping(userData, callback) {
             callback(data)
         } 
         else {
-            callback(userData);
+            callback(data);
         }
       });
 

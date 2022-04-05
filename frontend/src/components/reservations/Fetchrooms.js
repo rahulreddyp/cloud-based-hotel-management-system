@@ -1,10 +1,7 @@
 import React from "react";
 import { API } from "../../backend";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/esm/Card";
-import Dropdown from "react-bootstrap/Dropdown";
 import ListGroup from "react-bootstrap/ListGroup";
-import Form from "react-bootstrap/Form";
 
 class FetchRooms extends React.Component {
   constructor(props) {
@@ -18,7 +15,7 @@ class FetchRooms extends React.Component {
   componentDidMount() {
     const getAllUsers = async () => {
       const res = await fetch(
-        `${API}/fetchdata`,
+        `/fetchdata`,
 
         {
           method: "POST",
@@ -59,8 +56,8 @@ class FetchRooms extends React.Component {
 
     return (
       <div className="Fetchrooms">
-        {items.map((item) => (
-          <div style={{ width: "60%", margin: "auto", textAlign: "center" }}>
+        {items.map((item, index) => (
+          <div key={index} style={{ width: "60%", margin: "auto", textAlign: "center" }}>
             <h2> Available Rooms</h2>
             <ListGroup as="ul" key={item.roomnumber}>
               <ListGroup.Item as="li" variant="secondary">

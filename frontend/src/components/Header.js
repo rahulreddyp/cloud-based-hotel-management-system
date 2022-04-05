@@ -8,9 +8,11 @@ const Header = ({m}) => {
 
     const signoutUsers = () => {
         signoutUser(() => {
+            localStorage.clear("token");
             history.push("/");
         })
     }
+
   return (
       <div>
     <Navbar collapseOnSelect fixed="top" expand="sm" bg="dark" variant="dark">
