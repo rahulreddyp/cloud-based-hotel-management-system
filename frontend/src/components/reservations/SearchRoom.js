@@ -20,9 +20,14 @@ class SearchRoom extends React.Component {
     this.props.history.push("/fetchrooms", this.state);
     e.preventDefault();
   };
+  previoushistory = (e)=>{
+    this.props.history.push("/bookinghistory", this.state);
+    e.preventDefault();
+  }
   render() {
     return (
       <div className="container">
+        <Button onClick={this.previoushistory}>Previous history</Button>
         <h3>Search Rooms</h3>
         <Form onSubmit={this.handleSubmit}>
           <div className="input-block">
