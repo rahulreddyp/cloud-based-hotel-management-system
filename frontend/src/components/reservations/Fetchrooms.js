@@ -56,9 +56,9 @@ class FetchRooms extends React.Component {
 
     return (
       <div className="Fetchrooms">
+        <h2> Available Rooms</h2>
         {items.map((item, index) => (
-          <div key={index} style={{ width: "60%", margin: "auto", textAlign: "center" }}>
-            <h2> Available Rooms</h2>
+          <div key={index} style={{ width: "60%", margin: "auto", textAlign: "center" }}>            
             <ListGroup as="ul" key={item.roomnumber}>
               <ListGroup.Item as="li" variant="secondary">
                 Room Number: {item.roomnumber}

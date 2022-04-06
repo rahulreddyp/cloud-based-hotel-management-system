@@ -50,7 +50,7 @@ const Signup = () => {
       SignupUser()
       .then((data) => {
         if (data.error) {
-          setValues({ ...values, message: data.error, success: false });
+          setValues({ ...values, message: data.message, success: false });
         } else {
           console.log("User Signup success", data);
           setValues({
