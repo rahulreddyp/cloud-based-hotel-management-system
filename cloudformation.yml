@@ -63,30 +63,30 @@ Resources:
 
 
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-elasticbeanstalk.html
-  # ElasticBeanstalkApp:
-  #   Type: AWS::ElasticBeanstalk::Application
-  #   Properties:
-  #     ApplicationName: sample
-  #     Description: AWS Elastic Beanstalk application for frontend
+  ElasticBeanstalkApp:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName: sample
+      Description: AWS Elastic Beanstalk application for frontend
 
-  # EBApplicationVersion:
-  #   Type: AWS::ElasticBeanstalk::ApplicationVersion
-  #   Properties:
-  #     ApplicationName:
-  #       Ref: ElasticBeanstalkApp
-  #     Description: AWS ElasticBeanstalk Application Version
-  #     SourceBundle:
-  #       S3Bucket: !Sub "elasticbeanstalk-samples-${AWS::Region}"
-  #       S3Key: php-newsample-app.zip  
+  EBApplicationVersion:
+    Type: AWS::ElasticBeanstalk::ApplicationVersion
+    Properties:
+      ApplicationName:
+        Ref: ElasticBeanstalkApp
+      Description: AWS ElasticBeanstalk Application Version
+      SourceBundle:
+        S3Bucket: !Sub "elasticbeanstalk-samples-${AWS::Region}"
+        S3Key: php-newsample-app.zip  
 
-  # Environment:
-  #   Type: AWS::ElasticBeanstalk::Environment
-  #   Properties: 
-  #     ApplicationName: !Ref ElasticBeanstalkApp
-  #     Description: "AWS Elastic Beanstalk Environment running Sample Application"
-  #     EnvironmentName: sample-env
-  #     TemplateName: DefaultConfiguration
-      # VersionLabel: "Initial Version"
+  Environment:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties: 
+      ApplicationName: !Ref ElasticBeanstalkApp
+      Description: "AWS Elastic Beanstalk Environment running Sample Application"
+      EnvironmentName: sample-env
+      TemplateName: DefaultConfiguration
+      VersionLabel: "Initial Version"
 
 # VPC Template Reference: https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html
   VPC:
@@ -288,7 +288,7 @@ Resources:
         WriteCapacityUnits: "5"
       TableName: "HouseKeeping"
     
-# Outputs:
+Outputs:
   UserPoolId:
     Value: !Ref UserPool
   UserPoolClientId:

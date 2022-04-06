@@ -46,6 +46,8 @@ exports.registerUser = async (data) => {
 
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
+    console.log(data.password);
+
     userPool.signUp(
       data.email,
       data.password,
@@ -53,9 +55,18 @@ exports.registerUser = async (data) => {
       null,
       (err, result) => {
         if (err) {
+          if(err.name == "InvalidPasswordException")  {
+          
           return resolve({
-            statusCode: 422,
+            statusCode: 400,
             error: err,
+            message: "Password must contain only numbers, special Characters, lowercase and upper case letters "  
+          });
+          }
+          return resolve({
+            statusCode: 400,
+            error: err,
+            message: "Error Occurred!"  
           });
         }
 
