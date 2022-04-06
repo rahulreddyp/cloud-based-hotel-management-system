@@ -5,6 +5,10 @@ Parameters:
   KeyName:
     Type: AWS::EC2::KeyPair::KeyName
 
+  ElasticBeanstalkApplication:
+    Description: Provide Elastic Beanstalk Frontend Application Name
+    Type: String
+    
   # VPC Template Reference: https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html
   PublicSubnet1CIDR:
     Description: Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone
@@ -28,10 +32,6 @@ Resources:
         EmailSubjectByLink: 'Skyline: Your verification code' 
         DefaultEmailOption: CONFIRM_WITH_LINK        
       Schema:
-        - Name: name
-          AttributeDataType: String
-          Required: true
-          Mutable: true
         - Name: email
           AttributeDataType: String
           Required: true
@@ -61,12 +61,11 @@ Resources:
       Domain: "skyline"
       UserPoolId: !Ref UserPool
 
-
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-elasticbeanstalk.html
   ElasticBeanstalkApp:
     Type: AWS::ElasticBeanstalk::Application
     Properties:
-      ApplicationName: sample
+      ApplicationName: !Ref ElasticBeanstalkApplication
       Description: AWS Elastic Beanstalk application for frontend
 
   EBApplicationVersion:
@@ -76,17 +75,38 @@ Resources:
         Ref: ElasticBeanstalkApp
       Description: AWS ElasticBeanstalk Application Version
       SourceBundle:
-        S3Bucket: !Sub "elasticbeanstalk-samples-${AWS::Region}"
-        S3Key: php-newsample-app.zip  
+        S3Bucket: !Sub "elasticbeanstalk-frontend"
+        S3Key: Dockerrun.aws.json
+
+  EBConfigurationTemplate:
+    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+    Properties:
+      OptionSettings:
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: IamInstanceProfile
+          Value: !Ref InstanceProfile   
+      ApplicationName:
+        Ref: ElasticBeanstalkApp
+      Description: AWS ElasticBeanstalk Configuration Template
+      SolutionStackName: "64bit Amazon Linux 2 v3.4.13 running Docker" 
 
   Environment:
     Type: AWS::ElasticBeanstalk::Environment
     Properties: 
       ApplicationName: !Ref ElasticBeanstalkApp
       Description: "AWS Elastic Beanstalk Environment running Sample Application"
-      EnvironmentName: sample-env
-      TemplateName: DefaultConfiguration
-      VersionLabel: "Initial Version"
+      # EnvironmentName: sample-env
+      TemplateName:
+        Ref: EBConfigurationTemplate
+      VersionLabel:
+        Ref: EBApplicationVersion
+
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      Roles: 
+        - LabRole     
 
 # VPC Template Reference: https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html
   VPC:
@@ -114,13 +134,7 @@ Resources:
       VpcId: !Ref VPC
       AvailabilityZone: !Select [ 0, !GetAZs '' ]
       CidrBlock: !Ref PublicSubnet1CIDR
-      MapPublicIpOnLaunch: true        
-
-  # NatGateway1EIP:
-  #   Type: AWS::EC2::EIP
-  #   DependsOn: InternetGatewayAttachment
-  #   Properties:
-  #     Domain: vpc     
+      MapPublicIpOnLaunch: true          
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
@@ -166,6 +180,7 @@ Resources:
           CidrIp: 0.0.0.0/0
 
   # EC2 Template Reference: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-ec2.html
+
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
@@ -174,9 +189,6 @@ Resources:
       KeyName: !Ref KeyName
       SecurityGroupIds:
         - !GetAtt EC2SecurityGroup.GroupId
-      # !Join [',' !GetAtt EC2SecurityGroup.GroupId]
-      # SecurityGroups:
-      #   - !Ref EC2SecurityGroup
       SubnetId: !Ref PublicSubnet1
 
       Tags:
@@ -197,7 +209,6 @@ Resources:
           sudo chown -R $USER:$USER .
 
           sudo yum install git -y
-
           
         # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 
