@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 
 class BookingHistory extends React.Component {
   state = {
-    mail: JSON.parse(localStorage.getItem("email")),
+    mail: (localStorage.getItem("email")  !== "undefined") ? localStorage.getItem("email") : "",
     historydata: [],
   };
   componentDidMount() {
@@ -45,18 +45,18 @@ class BookingHistory extends React.Component {
   };
   render() {
     return (
-      <div className="container">        
+      <div className="container">   
+      <h3>Booking history</h3>     
         {this.state.historydata.map((data, index) => (
           <div
             key={index}
             style={{ width: "60%", margin: "auto", textAlign: "center" }}
-          >
-            <h3>Booking history</h3>
+          >            
             <Card>
               <Card.Header>                
                 <div style={{ display: "flex" }}>
                   <Card.Title style={{ marginRight: "auto" }}>
-                  Id: {data.bookingid}
+                  Booking Id: {data.bookingid}
                   </Card.Title>
                   <Card.Subtitle>Guests: {data.guests}</Card.Subtitle>
                 </div>

@@ -3,12 +3,15 @@ export const isLoggedIn = () => {
     if (typeof window == "undefined") {
       return false;
     }
-    const user = JSON.parse(localStorage.getItem("token"));
-    if (user) {
-      return user;
-    } else {
+
+    if (localStorage.getItem("token")  !== "undefined") {
+      const user = localStorage.getItem("token");
+      if (user) {
+        return user;
+      }
+  }else{  
       return false;
-    }
+  }
 };
 
 export const signoutUser = async next => {

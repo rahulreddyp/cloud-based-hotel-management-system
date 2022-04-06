@@ -33,7 +33,7 @@ class HouseKeeping extends React.Component {
 
           console.log("success housekeeping");
           alert("Housekeeping booked");
-          this.props.history.push("/",this.state.bookingid);
+          this.props.history.push("/searchroom",this.state.bookingid);
         } else {
           console.log("failed order");
         }
@@ -42,10 +42,9 @@ class HouseKeeping extends React.Component {
     e.preventDefault();
   };
   home = (e)=>{
-    this.props.history.push("/");
+    this.props.history.push("/searchroom");
   }
   render() {
-      console.log(this.props.location.state)
     return (
       <div style={{ width: "60%", margin: "auto" }}>
           <div style={{textAlign:"center"}}>

@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 class BookRoom extends React.Component {
   state = {
-    user: "",
+    user: (localStorage.getItem("email")  !== "undefined") ? localStorage.getItem("email") : "",
     roomnumber: this.props.location.state.roomnumber,
     fullname: "",
     guests: "",
@@ -33,7 +33,7 @@ class BookRoom extends React.Component {
       .then((data) => {
         console.log('sm', data.user.email);
         const email = data.user.email
-        this.setState({ user: email });
+        // this.setState({ user: email });
       })
       .catch((err) => console.log(err));
   };
