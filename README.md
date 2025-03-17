@@ -5,13 +5,12 @@
 * *Date Created*: 03 FEB 2022
 * *Last Modified*: 19 MAR 2022
 
-## Team
+## Author
 
 * [Rahul Reddy Puchakayala](rahul.reddyp@dal.ca)
-* [Geetanjali Bommera](gt58439@dal.ca)
 
 
-## Potential Features
+## Features
 
 1.  User Profile Management
 2.	Reservations
@@ -57,18 +56,6 @@ CloudFormation
 
 Went through different AWS services and started analyzing which services would be useful and required in our project.
 
-### To-do
-Go through each service thoroughly and finalize the services to be used 
-
-
-## Project Status
-
-###  Completed Tasks
-
-1. User Management (SignUp, SignIn, Token Generation) - done
+1. User Management (SignUp, SignIn, Token Generation, Forgot Password) - done
 2. Reservations - Search Rooms, Fetch Rooms, Book Room - done
-
-### In Progress
-
-1. User Mangement (Forgot Password)
-2. Virtual Support
+3. Virtual Support
